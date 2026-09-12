@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  tagline     String
+  description String
+  image       String
+  skuBase     String
+  channel     String    @default("retail") // retail | wholesale | inquiry
+  featured    Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  variants    Variant[]
+}
+
+model Variant {
+  id              String   @id @default(cuid())
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size            String
+  sku             String   @unique
+  retailPrice     Int? // pesewas
+  wholesalePrice  Int? // pesewas
+  stock           Int      @default(100)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([productId])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  reference       String      @unique
+  status          String      @default("pending") // pending | pending_cod | paid | fulfilled | cancelled
+  paymentMethod   String // paystack | cod | whatsapp
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  addressLine1    String?
+  city            String?
+  region          String?
+  notes           String?
+  subtotal        Int
+  shipping        Int
+  total           Int
+  paystackRef     String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String @id @default(cuid())
+  orderId     String
+  order       Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productSlug String
+  productName String
+  size        String
+  quantity    Int
+  unitPrice   Int
+  lineTotal   Int
+
+  @@index([orderId])
+}

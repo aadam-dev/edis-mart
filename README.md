@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Yeskoko by Edis Mart
 
-## Getting Started
+Premium MotionSites-style storefront for Yeskoko dried fruit snacks (Ghana). Next.js + Tailwind + Prisma + Paystack.
 
-First, run the development server:
+## Quick start
 
 ```bash
+npm install
+npx prisma migrate dev
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Admin: `/admin` (password from `.env` `ADMIN_PASSWORD`, default `yeskoko-admin`).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Docs
 
-## Learn More
+Migration brain lives in `docs/`:
 
-To learn more about Next.js, take a look at the following resources:
+- `00-brief.md` … `08-cutover.md`
+- Payments: `docs/06-payments.md`
+- SEO: `docs/07-seo.md`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js App Router, Tailwind v4, Outfit + Manrope
+- Prisma + SQLite (swap `DATABASE_URL` to Postgres for production)
+- Paystack (card + MoMo) + COD + WhatsApp
+- Zustand cart, Motion/GSAP-ready client leaves
 
-## Deploy on Vercel
+## Env
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Copy `.env.example` to `.env`. Add Paystack keys before live payments.
