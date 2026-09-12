@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getFeaturedProducts } from "@/data/catalog";
 import { HomeHero } from "@/components/motion/HomeHero";
+import { Marquee } from "@/components/motion/Marquee";
 import { TaglineReveal } from "@/components/motion/TaglineReveal";
 import { StoryReveal } from "@/components/motion/StoryReveal";
 import { ProductCard } from "@/components/ProductCard";
@@ -44,6 +45,7 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <HomeHero />
+      <Marquee text="100% NATURAL ✳ NO PRESERVATIVES ✳ SUN-DRIED IN GHANA ✳" />
 
       <section className="mx-auto max-w-[1400px] px-4 py-24 md:px-6 md:py-36">
         <Reveal>

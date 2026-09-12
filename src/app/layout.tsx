@@ -59,6 +59,10 @@ export default function RootLayout({
         </a>
         <SmoothScroll>
           <Grain />
+          <div 
+            className="pointer-events-none fixed inset-0 z-[-1] bg-[url('/brand/bg-botanical.jpg')] bg-cover bg-center opacity-[0.15] mix-blend-multiply"
+            aria-hidden="true"
+          />
           <Header />
           <main id="main" className="flex-1">
             {children}
