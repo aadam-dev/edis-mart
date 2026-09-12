@@ -10,16 +10,13 @@ export function TaglineReveal() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 0.8", "end 0.4"],
+    offset: ["start 0.85", "end 0.35"],
   });
 
   return (
-    <section
-      ref={ref}
-      className="border-y border-mist bg-forest px-4 py-24 text-bone md:px-6 md:py-32"
-    >
+    <section ref={ref} className="px-4 py-28 md:px-6 md:py-40">
       <div className="mx-auto max-w-[1400px]">
-        <p className="font-display text-4xl font-semibold tracking-tight md:text-6xl lg:text-7xl">
+        <p className="font-display text-[clamp(2.5rem,8vw,6.5rem)] font-medium leading-[1.08] tracking-tight text-forest">
           {words.map((word, i) => {
             const start = i / words.length;
             const end = start + 1 / words.length;
@@ -53,7 +50,7 @@ function Word({
   end: number;
   reduce: boolean;
 }) {
-  const opacity = useTransform(progress, [start, end], [0.28, 1]);
+  const opacity = useTransform(progress, [start, end], [0.18, 1]);
   return (
     <motion.span
       style={reduce ? undefined : { opacity }}

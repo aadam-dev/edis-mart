@@ -1,46 +1,101 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ButtonLink } from "@/components/ButtonLink";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function HomeHero() {
   const reduce = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const imageWrapRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (reduce || !sectionRef.current || !imageRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.to(imageRef.current, {
+        scale: 1.35,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [reduce]);
 
   return (
-    <section className="relative overflow-hidden border-b border-mist">
-      <div className="mx-auto grid min-h-[100dvh] max-w-[1400px] items-center gap-10 px-4 pb-16 pt-10 md:grid-cols-2 md:px-6 md:pb-20 md:pt-16">
-        <div className="relative z-10 max-w-xl">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-mist/70"
+    >
+      <div className="mx-auto grid min-h-[100dvh] max-w-[1400px] items-center gap-12 px-4 pb-20 pt-10 md:grid-cols-12 md:gap-8 md:px-6 md:pb-24 md:pt-14">
+        <div className="relative z-10 md:col-span-5 md:pb-8">
           <motion.p
             initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-sm font-semibold uppercase tracking-[0.18em] text-leaf"
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="label-caps text-clay"
           >
             Yeskoko by Edis Mart
           </motion.p>
-          <motion.h1
-            initial={reduce ? false : { opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-4 font-display text-4xl font-semibold tracking-tight text-ink md:text-5xl lg:text-6xl"
-          >
-            Coconut that still tastes like fruit.
-          </motion.h1>
+
+          <h1 className="mt-5 font-display text-[clamp(2.75rem,7vw,5.5rem)] leading-[1.05] tracking-tight text-forest">
+            {(
+              reduce
+                ? ["Coconut that", "still tastes", "like fruit."]
+                : ["Coconut that", "still tastes", "like fruit."]
+            ).map((line, i) => (
+              <span key={line} className="block overflow-hidden pb-1">
+                <motion.span
+                  className="block"
+                  initial={reduce ? false : { y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{
+                    duration: 1,
+                    delay: 0.08 + i * 0.09,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
+                  {i === 2 ? <em className="italic">{line}</em> : line}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
+
           <motion.p
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-5 max-w-[42ch] text-base leading-relaxed text-ink/70 md:text-lg"
-          >
-            Yeskoko flakes and chips, dried in Ghana. No preservatives. Shop 50g
-            to 1kg.
-          </motion.p>
-          <motion.div
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 flex flex-wrap gap-3"
+            transition={{
+              duration: 0.8,
+              delay: 0.42,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mt-6 max-w-[36ch] text-base leading-relaxed text-forest/65 md:text-lg"
+          >
+            Flakes and chips, dried in Ghana. No preservatives. Sizes from 50g
+            to 1kg.
+          </motion.p>
+
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.7,
+              delay: 0.52,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mt-9 flex flex-wrap gap-3"
           >
             <ButtonLink href="/shop">Shop the flakes</ButtonLink>
             <ButtonLink href="/wholesale" variant="secondary">
@@ -50,26 +105,36 @@ export function HomeHero() {
         </div>
 
         <motion.div
-          initial={reduce ? false : { opacity: 0, scale: 0.96 }}
+          initial={reduce ? false : { opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mx-auto aspect-square w-full max-w-lg md:max-w-none"
+          transition={{
+            duration: 1.1,
+            delay: 0.18,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="relative md:col-span-7 md:col-start-6"
         >
-          <div className="absolute inset-6 rounded-full bg-leaf/10 blur-3xl" />
-          <div className="relative h-full overflow-hidden border border-mist bg-white shadow-[0_24px_80px_rgba(22,58,40,0.12)]">
-            <Image
-              src="/products/yeskoko.jpg"
-              alt="Yeskoko coconut flake pouches"
-              fill
-              priority
-              className="object-cover"
-              sizes="(max-width:768px) 90vw, 45vw"
-            />
-            <p className="absolute bottom-0 left-0 right-0 bg-forest/80 px-4 py-3 text-sm font-medium text-bone backdrop-blur-sm">
-              Pay with card, MoMo, or cash on delivery. Accra delivery and
-              pickup.
-            </p>
+          <div
+            ref={imageWrapRef}
+            className="arch-mask relative mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden bg-sage/20 md:ml-auto md:max-w-none md:aspect-[5/6]"
+          >
+            <div
+              ref={imageRef}
+              className="absolute inset-0 origin-[35%_40%] will-change-transform"
+            >
+              <Image
+                src="/products/yeskoko.jpg"
+                alt="Yeskoko coconut flake pouches"
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width:768px) 90vw, 55vw"
+              />
+            </div>
           </div>
+          <p className="mt-4 max-w-sm text-sm text-forest/55 md:ml-auto md:text-right">
+            Card, MoMo, or cash on delivery. Accra delivery and pickup.
+          </p>
         </motion.div>
       </div>
     </section>

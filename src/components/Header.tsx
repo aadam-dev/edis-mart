@@ -27,7 +27,7 @@ export function Header() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-mist/80 bg-bone/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-mist/60 bg-oat/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 md:h-[72px] md:px-6">
         <Link href="/" className="focus-ring flex items-center gap-2">
           <Image
@@ -40,15 +40,15 @@ export function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
           {links.map((link) => {
             const active = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`focus-ring text-sm font-semibold tracking-wide transition-colors ${
-                  active ? "text-leaf" : "text-ink/80 hover:text-leaf"
+                className={`focus-ring text-sm font-medium tracking-wide transition-colors ${
+                  active ? "text-clay" : "text-forest/70 hover:text-forest"
                 }`}
               >
                 {link.label}
@@ -60,20 +60,20 @@ export function Header() {
         <div className="flex items-center gap-3">
           <Link
             href="/cart"
-            className="focus-ring inline-flex items-center gap-2 rounded-full border border-forest/15 bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-leaf"
+            className="focus-ring inline-flex items-center gap-2 rounded-full border border-forest/12 px-3.5 py-2 text-sm font-medium text-forest transition hover:border-clay/50"
           >
-            <ShoppingBag size={18} weight="bold" />
+            <ShoppingBag size={18} weight="regular" />
             <span className="hidden sm:inline">
               {mounted ? formatGhs(subtotal) : "₵0.00"}
             </span>
-            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-leaf px-1 text-xs text-white">
+            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-clay px-1 text-xs text-oat">
               {mounted ? count : 0}
             </span>
           </Link>
 
           <button
             type="button"
-            className="focus-ring rounded-full border border-forest/15 p-2 lg:hidden"
+            className="focus-ring rounded-full border border-forest/12 p-2 lg:hidden"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
           >
@@ -83,14 +83,14 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-mist bg-bone px-4 py-4 lg:hidden">
-          <nav className="flex flex-col gap-3" aria-label="Mobile">
+        <div className="border-t border-mist bg-oat px-4 py-5 lg:hidden">
+          <nav className="flex flex-col gap-2" aria-label="Mobile">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-2 text-base font-semibold text-ink hover:bg-mist"
+                className="rounded-lg px-2 py-2.5 text-base font-medium text-forest hover:bg-mist/60"
               >
                 {link.label}
               </Link>
@@ -98,7 +98,7 @@ export function Header() {
             <Link
               href="/shop"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-full bg-leaf px-4 py-3 text-center text-sm font-semibold text-white"
+              className="mt-3 rounded-full bg-clay px-4 py-3 text-center text-sm font-semibold text-oat"
             >
               Shop the flakes
             </Link>

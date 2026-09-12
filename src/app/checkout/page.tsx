@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/store/cart";
 import { formatGhs, site, whatsappLink } from "@/lib/site";
 import { ButtonLink } from "@/components/ButtonLink";
+import { Reveal } from "@/components/motion/Reveal";
 
 declare global {
   interface Window {
@@ -48,11 +49,13 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-20 text-center">
-        <h1 className="font-display text-3xl font-semibold">Nothing to checkout</h1>
-        <div className="mt-6">
-          <ButtonLink href="/shop">Shop the flakes</ButtonLink>
-        </div>
+      <div className="mx-auto max-w-xl px-4 py-24 text-center">
+        <Reveal>
+          <h1 className="font-display text-4xl font-medium tracking-tight text-forest">Nothing to checkout</h1>
+          <div className="mt-8">
+            <ButtonLink href="/shop">Shop the flakes</ButtonLink>
+          </div>
+        </Reveal>
       </div>
     );
   }
@@ -197,109 +200,116 @@ export default function CheckoutPage() {
   ].join("\n");
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-12 md:px-6 md:py-16">
-      <h1 className="font-display text-4xl font-semibold tracking-tight">
-        Checkout
-      </h1>
+    <div className="mx-auto max-w-[1100px] px-4 py-16 md:px-6 md:py-24">
+      <Reveal>
+        <h1 className="font-display text-5xl font-medium tracking-tight text-forest md:text-6xl">
+          Checkout
+        </h1>
+      </Reveal>
       <form
         onSubmit={onSubmit}
-        className="mt-10 grid gap-10 lg:grid-cols-[1.2fr_0.8fr]"
+        className="mt-12 grid gap-12 lg:grid-cols-[1.2fr_0.8fr]"
       >
-        <div className="space-y-4">
-          {(
-            [
-              ["Full name", name, setName, "text"],
-              ["Email", email, setEmail, "email"],
-              ["Phone", phone, setPhone, "tel"],
-              ["Address", address, setAddress, "text"],
-              ["City", city, setCity, "text"],
-            ] as const
-          ).map(([label, value, setter, type]) => (
-            <label key={label} className="block space-y-2">
-              <span className="text-sm font-semibold">{label}</span>
-              <input
-                type={type}
-                required={label !== "Address"}
-                value={value}
-                onChange={(e) => setter(e.target.value)}
-                className="w-full rounded-lg border border-mist bg-white px-3 py-3 text-sm outline-none ring-leaf focus:ring-2"
-              />
-            </label>
-          ))}
-          <label className="block space-y-2">
-            <span className="text-sm font-semibold">Notes</span>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={3}
-              className="w-full rounded-lg border border-mist bg-white px-3 py-3 text-sm outline-none ring-leaf focus:ring-2"
-              placeholder="Landmark, pickup preference..."
-            />
-          </label>
-
-          <fieldset className="space-y-3 pt-2">
-            <legend className="text-sm font-semibold">Payment</legend>
+        <Reveal delay={0.1}>
+          <div className="space-y-5">
             {(
               [
-                ["paystack", "Card or MoMo (Paystack)"],
-                ["cod", "Cash on delivery"],
+                ["Full name", name, setName, "text"],
+                ["Email", email, setEmail, "email"],
+                ["Phone", phone, setPhone, "tel"],
+                ["Address", address, setAddress, "text"],
+                ["City", city, setCity, "text"],
               ] as const
-            ).map(([value, label]) => (
-              <label
-                key={value}
-                className={`flex cursor-pointer items-center gap-3 border px-4 py-3 ${
-                  method === value ? "border-leaf bg-leaf/5" : "border-mist bg-white"
-                }`}
-              >
+            ).map(([label, value, setter, type]) => (
+              <label key={label} className="block space-y-2">
+                <span className="text-sm font-medium text-forest/80">{label}</span>
                 <input
-                  type="radio"
-                  name="method"
-                  checked={method === value}
-                  onChange={() => setMethod(value)}
+                  type={type}
+                  required={label !== "Address"}
+                  value={value}
+                  onChange={(e) => setter(e.target.value)}
+                  className="w-full rounded-[0.75rem] border border-mist/80 bg-oat/40 px-4 py-3.5 text-sm text-forest outline-none ring-clay/40 transition focus:ring-2"
                 />
-                <span className="text-sm font-medium">{label}</span>
               </label>
             ))}
-          </fieldset>
-        </div>
+            <label className="block space-y-2">
+              <span className="text-sm font-medium text-forest/80">Notes</span>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows={3}
+                className="w-full rounded-[0.75rem] border border-mist/80 bg-oat/40 px-4 py-3.5 text-sm text-forest outline-none ring-clay/40 transition focus:ring-2"
+                placeholder="Landmark, pickup preference..."
+              />
+            </label>
 
-        <aside className="h-fit space-y-4 border border-mist bg-white p-6">
-          <h2 className="font-display text-xl font-semibold">Order</h2>
-          <ul className="space-y-2 text-sm">
-            {items.map((i) => (
-              <li key={i.sku} className="flex justify-between gap-3">
-                <span>
-                  {i.productName} ({i.size}) × {i.quantity}
-                </span>
-                <span>{formatGhs(i.unitPrice * i.quantity)}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="flex justify-between border-t border-mist pt-3 text-sm">
-            <span>Delivery</span>
-            <span>{formatGhs(shipping)}</span>
+            <fieldset className="space-y-3 pt-4">
+              <legend className="text-sm font-medium text-forest/80">Payment</legend>
+              {(
+                [
+                  ["paystack", "Card or MoMo (Paystack)"],
+                  ["cod", "Cash on delivery"],
+                ] as const
+              ).map(([value, label]) => (
+                <label
+                  key={value}
+                  className={`flex cursor-pointer items-center gap-3 rounded-[0.75rem] border px-4 py-3.5 transition ${
+                    method === value ? "border-clay bg-clay/5" : "border-mist/80 bg-oat/40"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="method"
+                    checked={method === value}
+                    onChange={() => setMethod(value)}
+                    className="accent-clay"
+                  />
+                  <span className="text-sm font-medium text-forest">{label}</span>
+                </label>
+              ))}
+            </fieldset>
           </div>
-          <div className="flex justify-between text-base font-semibold">
-            <span>Total</span>
-            <span>{formatGhs(total)}</span>
-          </div>
-          {error && <p className="text-sm text-red-700">{error}</p>}
-          <button
-            type="submit"
-            disabled={busy}
-            className="focus-ring w-full rounded-full bg-leaf px-5 py-3 text-base font-semibold text-white hover:bg-forest disabled:opacity-60"
-          >
-            {busy ? "Processing..." : method === "cod" ? "Place COD order" : "Pay with Paystack"}
-          </button>
-          <a
-            href={whatsappLink(waLines)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block text-center text-sm font-semibold text-leaf hover:underline"
-          >
-            Or order on WhatsApp
-          </a>
-        </aside>
+        </Reveal>
+
+        <Reveal delay={0.2}>
+          <aside className="h-fit space-y-6 rounded-[1.5rem] border border-mist/80 bg-mist/20 p-8">
+            <h2 className="font-display text-3xl font-medium text-forest">Order</h2>
+            <ul className="space-y-3 text-sm text-forest/80">
+              {items.map((i) => (
+                <li key={i.sku} className="flex justify-between gap-3">
+                  <span>
+                    {i.productName} ({i.size}) × {i.quantity}
+                  </span>
+                  <span>{formatGhs(i.unitPrice * i.quantity)}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-between border-t border-mist/80 pt-4 text-sm text-forest/80">
+              <span>Delivery</span>
+              <span>{formatGhs(shipping)}</span>
+            </div>
+            <div className="flex justify-between text-base font-medium text-forest">
+              <span>Total</span>
+              <span>{formatGhs(total)}</span>
+            </div>
+            {error && <p className="text-sm text-red-700">{error}</p>}
+            <button
+              type="submit"
+              disabled={busy}
+              className="focus-ring mt-2 w-full rounded-full bg-clay px-6 py-3.5 text-sm font-semibold tracking-wide text-oat transition duration-500 hover:bg-forest disabled:opacity-60"
+            >
+              {busy ? "Processing..." : method === "cod" ? "Place COD order" : "Pay with Paystack"}
+            </button>
+            <a
+              href={whatsappLink(waLines)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center text-sm font-medium text-clay transition hover:text-forest hover:underline"
+            >
+              Or order on WhatsApp
+            </a>
+          </aside>
+        </Reveal>
       </form>
     </div>
   );

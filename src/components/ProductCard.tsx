@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { formatGhs } from "@/lib/site";
 import type { CatalogProduct } from "@/data/catalog";
+import { ParallaxMedia } from "@/components/motion/ParallaxMedia";
 
 function priceLabel(product: CatalogProduct) {
   if (product.channel === "inquiry") return "Request a batch";
@@ -21,27 +24,52 @@ function priceLabel(product: CatalogProduct) {
   return min === max ? formatGhs(min) : `${formatGhs(min)} - ${formatGhs(max)}`;
 }
 
-export function ProductCard({ product }: { product: CatalogProduct }) {
-  return (
-    <Link
-      href={`/product/${product.slug}`}
-      className="group focus-ring block overflow-hidden border border-mist bg-white transition duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-leaf/40"
+export function ProductCard({
+  product,
+  variant = "default",
+  parallax = 0,
+}: {
+  product: CatalogProduct;
+  variant?: "default" | "editorial";
+  parallax?: number;
+}) {
+  const isEditorial = variant === "editorial";
+
+  const media = (
+    <div
+      className={`relative overflow-hidden bg-sage/15 ${
+        isEditorial
+          ? "arch-mask aspect-[4/5]"
+          : "aspect-[4/5] rounded-[1.75rem]"
+      }`}
     >
-      <div className="relative aspect-square overflow-hidden bg-mist">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          className="object-cover transition duration-700 group-hover:scale-105"
-          sizes="(max-width:768px) 100vw, 33vw"
-        />
-      </div>
-      <div className="space-y-2 p-5">
-        <p className="font-display text-xl font-semibold tracking-tight text-ink">
+      <Image
+        src={product.image}
+        alt={product.name}
+        fill
+        className="object-cover transition duration-[1.1s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+        sizes="(max-width:768px) 100vw, 40vw"
+      />
+    </div>
+  );
+
+  return (
+    <Link href={`/product/${product.slug}`} className="group focus-ring block">
+      {parallax > 0 ? (
+        <ParallaxMedia speed={parallax} className="rounded-[inherit]">
+          <div className="scale-110">{media}</div>
+        </ParallaxMedia>
+      ) : (
+        media
+      )}
+      <div className={`space-y-1.5 ${isEditorial ? "mt-5" : "mt-4 px-1"}`}>
+        <p className="label-caps text-sage">{priceLabel(product)}</p>
+        <p className="font-display text-2xl font-medium tracking-tight text-forest md:text-[1.65rem]">
           {product.name}
         </p>
-        <p className="text-sm text-ink/65">{product.tagline}</p>
-        <p className="text-sm font-semibold text-leaf">{priceLabel(product)}</p>
+        <p className="max-w-[32ch] text-sm leading-relaxed text-forest/60">
+          {product.tagline}
+        </p>
       </div>
     </Link>
   );

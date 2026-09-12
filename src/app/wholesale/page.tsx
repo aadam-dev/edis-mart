@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { whatsappLink } from "@/lib/site";
 import { ButtonLink } from "@/components/ButtonLink";
+import { Reveal } from "@/components/motion/Reveal";
 
 export const metadata: Metadata = {
   title: "Wholesale coconut flakes Ghana",
@@ -13,39 +14,47 @@ export default function WholesalePage() {
     "Hi Yeskoko, I want wholesale pricing. Business: ... Sizes: ... Volume: ... City: Accra";
 
   return (
-    <div className="mx-auto max-w-[1000px] px-4 py-14 md:px-6 md:py-20">
-      <h1 className="font-display text-4xl font-semibold tracking-tight md:text-5xl">
-        Stock Yeskoko
-      </h1>
-      <p className="mt-4 max-w-[55ch] text-lg text-ink/70">
-        Retailers, hotels, and bulk buyers. Tell us sizes and volume. We reply
-        on WhatsApp.
-      </p>
-      <div className="mt-10 grid gap-4 md:grid-cols-3">
+    <div className="mx-auto max-w-[1000px] px-4 py-16 md:px-6 md:py-24">
+      <Reveal>
+        <h1 className="font-display text-5xl font-medium tracking-tight text-forest md:text-6xl lg:text-7xl">
+          Stock Yeskoko
+        </h1>
+        <p className="mt-6 max-w-[50ch] text-lg leading-relaxed text-forest/70 md:text-xl">
+          Retailers, hotels, and bulk buyers. Tell us sizes and volume. We reply
+          on WhatsApp.
+        </p>
+      </Reveal>
+      
+      <div className="mt-16 grid gap-6 md:grid-cols-3">
         {[
           ["Sweetened flakes", "50g to 700g wholesale rates"],
           ["Unsweetened flakes", "250g to 1kg kitchen packs"],
           ["Chia chia coco", "Built for food service volume"],
-        ].map(([title, body]) => (
-          <div key={title} className="border border-mist bg-white p-5">
-            <p className="font-display text-xl font-semibold">{title}</p>
-            <p className="mt-2 text-sm text-ink/65">{body}</p>
-          </div>
+        ].map(([title, body], i) => (
+          <Reveal key={title} delay={0.1 + i * 0.05}>
+            <div className="border-t border-mist/80 pt-6">
+              <p className="font-display text-2xl font-medium text-forest">{title}</p>
+              <p className="mt-2 text-sm leading-relaxed text-forest/65">{body}</p>
+            </div>
+          </Reveal>
         ))}
       </div>
-      <div className="mt-10 flex flex-wrap gap-3">
-        <a
-          href={whatsappLink(message)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="focus-ring inline-flex rounded-full bg-leaf px-5 py-3 text-base font-semibold text-white hover:bg-forest"
-        >
-          Message wholesale
-        </a>
-        <ButtonLink href="/shop" variant="secondary">
-          Browse retail
-        </ButtonLink>
-      </div>
+      
+      <Reveal delay={0.3}>
+        <div className="mt-16 flex flex-wrap gap-4">
+          <a
+            href={whatsappLink(message)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring inline-flex items-center justify-center rounded-full bg-clay px-6 py-3.5 text-sm font-semibold tracking-wide text-oat transition duration-500 hover:bg-forest active:scale-[0.98]"
+          >
+            Message wholesale
+          </a>
+          <ButtonLink href="/shop" variant="secondary">
+            Browse retail
+          </ButtonLink>
+        </div>
+      </Reveal>
     </div>
   );
 }
