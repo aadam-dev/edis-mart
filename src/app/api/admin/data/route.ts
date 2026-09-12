@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getProducts } from "@/data/catalog";
+import { listOrders } from "@/lib/orders";
 
 function authorized(req: Request) {
   const pwd = req.headers.get("x-admin-password");
@@ -10,12 +11,19 @@ export async function GET(req: Request) {
   if (!authorized(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const [products, orders] = await Promise.all([
-    prisma.product.findMany({
-      include: { variants: true },
-      orderBy: { sortOrder: "asc" },
-    }),
-    prisma.order.findMany({ orderBy: { createdAt: "desc" }, take: 50 }),
-  ]);
-  return NextResponse.json({ products, orders });
+  const products = getProducts().map((p) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    channel: p.channel,
+    variants: p.variants.map((v, i) => ({
+      id: `${p.id}-${i}`,
+      size: v.size,
+      sku: v.sku,
+      retailPrice: v.retailPrice,
+      wholesalePrice: v.wholesalePrice,
+      stock: v.stock,
+    })),
+  }));
+  return NextResponse.json({ products, orders: listOrders() });
 }

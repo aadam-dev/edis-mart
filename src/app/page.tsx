@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+import {
+  getFeaturedProducts,
+} from "@/data/catalog";
 import { HomeHero } from "@/components/motion/HomeHero";
 import { TaglineReveal } from "@/components/motion/TaglineReveal";
 import { ProductCard } from "@/components/ProductCard";
@@ -6,12 +8,8 @@ import { ButtonLink } from "@/components/ButtonLink";
 import { Reveal } from "@/components/motion/Reveal";
 import { site } from "@/lib/site";
 
-export default async function HomePage() {
-  const products = await prisma.product.findMany({
-    where: { featured: true },
-    include: { variants: true },
-    orderBy: { sortOrder: "asc" },
-  });
+export default function HomePage() {
+  const products = getFeaturedProducts();
 
   const jsonLd = {
     "@context": "https://schema.org",

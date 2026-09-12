@@ -3,12 +3,12 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { ShoppingCart, WhatsappLogo } from "@phosphor-icons/react";
-import type { Product, Variant } from "@prisma/client";
+import type { CatalogProduct } from "@/data/catalog";
 import { useCart } from "@/store/cart";
 import { formatGhs, whatsappLink } from "@/lib/site";
 
 type Props = {
-  product: Product & { variants: Variant[] };
+  product: CatalogProduct;
 };
 
 export function ProductBuyBox({ product }: Props) {
@@ -90,7 +90,7 @@ export function ProductBuyBox({ product }: Props) {
             const disabled = price == null && product.channel !== "inquiry";
             return (
               <button
-                key={v.id}
+                key={v.sku}
                 type="button"
                 disabled={disabled && product.channel !== "inquiry"}
                 onClick={() => setSize(v.size)}

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { updateOrderStatus } from "@/lib/orders";
 
 function authorized(req: Request) {
   const pwd = req.headers.get("x-admin-password");
@@ -11,9 +11,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { orderId, status } = await req.json();
-  await prisma.order.update({
-    where: { id: orderId },
-    data: { status },
-  });
+  const updated = updateOrderStatus(orderId, status);
+  if (!updated) {
+    return NextResponse.json({ error: "Order not found" }, { status: 404 });
+  }
   return NextResponse.json({ ok: true });
 }

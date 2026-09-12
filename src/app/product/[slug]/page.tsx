@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { getProduct, getProducts } from "@/data/catalog";
 import { ProductBuyBox } from "@/components/ProductBuyBox";
 import { ProductCard } from "@/components/ProductCard";
 import { formatGhs, site } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  const products = await prisma.product.findMany({ select: { slug: true } });
-  return products.map((p) => ({ slug: p.slug }));
+export function generateStaticParams() {
+  return getProducts().map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({ where: { slug } });
+  const product = getProduct(slug);
   if (!product) return { title: "Product" };
   return {
     title: product.name,
@@ -30,18 +29,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: { variants: true },
-  });
+  const product = getProduct(slug);
   if (!product) notFound();
 
-  const related = await prisma.product.findMany({
-    where: { slug: { not: slug } },
-    include: { variants: true },
-    take: 3,
-    orderBy: { sortOrder: "asc" },
-  });
+  const related = getProducts()
+    .filter((p) => p.slug !== slug)
+    .slice(0, 3);
 
   const offers = product.variants
     .filter((v) => v.retailPrice != null || v.wholesalePrice != null)

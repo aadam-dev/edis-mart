@@ -2,7 +2,7 @@ export const site = {
   name: "Yeskoko",
   company: "Edis Mart",
   domain: "edismartgh.com",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://edis-mart.vercel.app",
   email: "edismart777@gmail.com",
   phones: ["+233549092316", "+233543358778"],
   whatsapp: process.env.WHATSAPP_NUMBER || "233549092316",

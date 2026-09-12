@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
+import { getProducts } from "@/data/catalog";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -9,11 +9,8 @@ export const metadata: Metadata = {
     "Browse coconut flakes, mango chips, and wholesale sizes in GHS.",
 };
 
-export default async function ShopPage() {
-  const products = await prisma.product.findMany({
-    include: { variants: true },
-    orderBy: { sortOrder: "asc" },
-  });
+export default function ShopPage() {
+  const products = getProducts();
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-12 md:px-6 md:py-16">

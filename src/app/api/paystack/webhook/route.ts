@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
+import { getOrderRecord, markOrderPaid } from "@/lib/orders";
 
 export async function POST(req: Request) {
   const secret = process.env.PAYSTACK_SECRET_KEY;
@@ -21,17 +21,9 @@ export async function POST(req: Request) {
   };
 
   if (event.event === "charge.success" && event.data.status === "success") {
-    const order = await prisma.order.findUnique({
-      where: { reference: event.data.reference },
-    });
+    const order = getOrderRecord(event.data.reference);
     if (order && order.total === event.data.amount) {
-      await prisma.order.update({
-        where: { id: order.id },
-        data: {
-          status: "paid",
-          paystackRef: event.data.reference,
-        },
-      });
+      markOrderPaid(event.data.reference);
     }
   }
 

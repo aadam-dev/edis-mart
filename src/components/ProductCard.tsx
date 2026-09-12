@@ -1,11 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatGhs } from "@/lib/site";
-import type { Product, Variant } from "@prisma/client";
+import type { CatalogProduct } from "@/data/catalog";
 
-type ProductWithVariants = Product & { variants: Variant[] };
-
-function priceLabel(product: ProductWithVariants) {
+function priceLabel(product: CatalogProduct) {
   if (product.channel === "inquiry") return "Request a batch";
   if (product.channel === "wholesale") {
     const prices = product.variants
@@ -23,7 +21,7 @@ function priceLabel(product: ProductWithVariants) {
   return min === max ? formatGhs(min) : `${formatGhs(min)} - ${formatGhs(max)}`;
 }
 
-export function ProductCard({ product }: { product: ProductWithVariants }) {
+export function ProductCard({ product }: { product: CatalogProduct }) {
   return (
     <Link
       href={`/product/${product.slug}`}

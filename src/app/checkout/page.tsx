@@ -88,7 +88,40 @@ export default function CheckoutPage() {
       orderId: string;
       reference: string;
       total: number;
+      order: {
+        id: string;
+        reference: string;
+        status: string;
+        paymentMethod: string;
+        customerName: string;
+        customerEmail: string;
+        customerPhone: string;
+        addressLine1: string | null;
+        city: string | null;
+        region: string | null;
+        notes: string | null;
+        subtotal: number;
+        shipping: number;
+        total: number;
+        paystackRef: string | null;
+        createdAt: string;
+        items: {
+          productSlug: string;
+          productName: string;
+          size: string;
+          quantity: number;
+          unitPrice: number;
+          lineTotal: number;
+        }[];
+      };
     }>;
+  };
+
+  const persistOrder = (order: {
+    id: string;
+    [key: string]: unknown;
+  }) => {
+    sessionStorage.setItem(`yeskoko-order-${order.id}`, JSON.stringify(order));
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -101,13 +134,15 @@ export default function CheckoutPage() {
     setBusy(true);
     try {
       if (method === "cod") {
-        const order = await createOrder("cod");
+        const order = await createOrder(method);
+        persistOrder(order.order);
         clear();
         router.push(`/order/${order.orderId}`);
         return;
       }
 
       const order = await createOrder("paystack");
+      persistOrder(order.order);
       const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "";
 
       if (!publicKey.startsWith("pk_")) {

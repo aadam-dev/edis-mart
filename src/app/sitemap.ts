@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { prisma } from "@/lib/prisma";
+import { getProducts } from "@/data/catalog";
 import { site } from "@/lib/site";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await prisma.product.findMany({ select: { slug: true, updatedAt: true } });
+export default function sitemap(): MetadataRoute.Sitemap {
+  const products = getProducts();
   const staticRoutes = [
     "",
     "/shop",
@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...products.map((p) => ({
       url: `${site.url}/product/${p.slug}`,
-      lastModified: p.updatedAt,
+      lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
