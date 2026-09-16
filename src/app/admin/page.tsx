@@ -36,6 +36,7 @@ export default async function AdminTodayPage() {
       prisma.sale.aggregate({
         where: {
           createdAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
+          status: "completed",
         },
         _sum: { total: true },
         _count: true,

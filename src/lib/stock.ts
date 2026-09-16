@@ -5,7 +5,8 @@ export type MovementType =
   | "received"
   | "sold"
   | "adjusted"
-  | "damaged";
+  | "damaged"
+  | "returned";
 
 export async function getOnHand(variantId: string): Promise<number> {
   const agg = await prisma.stockMovement.aggregate({
@@ -116,6 +117,29 @@ export async function recordSaleMovement(input: {
     createdById: input.createdById,
   });
   return { oversell, onHandBefore: onHand };
+}
+
+/** Restock units from a till return / void. */
+export async function recordReturnMovement(input: {
+  variantId: string;
+  quantity: number;
+  unitCostPesewas: number;
+  refId: string;
+  note?: string;
+  createdById?: string;
+}) {
+  const qty = Math.abs(input.quantity);
+  if (qty < 1) return null;
+  return writeMovement({
+    variantId: input.variantId,
+    type: "returned",
+    qty,
+    unitCostPesewas: input.unitCostPesewas,
+    refType: "sale",
+    refId: input.refId,
+    note: input.note ?? "Till return",
+    createdById: input.createdById,
+  });
 }
 
 export async function receivePurchase(input: {

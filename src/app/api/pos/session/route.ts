@@ -23,6 +23,7 @@ export async function GET() {
   let expectedCash: number | null = null;
   if (session) {
     const cashFromSales = session.sales.reduce((sum, s) => {
+      if (s.status === "returned" || s.status === "voided") return sum;
       if (s.cashPesewas > 0) return sum + s.cashPesewas;
       // Legacy rows before split columns
       if (s.paymentMethod === "cash") return sum + s.total;
@@ -74,6 +75,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No open session" }, { status: 400 });
     }
     const cashFromSales = session.sales.reduce((sum, s) => {
+      if (s.status === "returned" || s.status === "voided") return sum;
       if (s.cashPesewas > 0) return sum + s.cashPesewas;
       if (s.paymentMethod === "cash") return sum + s.total;
       return sum;

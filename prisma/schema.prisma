@@ -116,7 +116,7 @@ model StockMovement {
   id              String   @id @default(cuid())
   variantId       String
   variant         Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
-  type            String // opening | received | sold | adjusted | damaged
+  type            String // opening | received | sold | adjusted | damaged | returned
   qty             Int // signed: + in, - out
   unitCostPesewas Int?
   refType         String? // order | sale | purchase | adjust
@@ -179,6 +179,7 @@ model Sale {
   sessionId       String
   session         TillSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   receiptNumber   String     @unique
+  status          String     @default("completed") // completed | returned | voided
   paymentMethod   String // momo | cash | bank | split
   momoRef         String? // optional MoMo or bank transfer reference
   cashPesewas     Int        @default(0)
@@ -193,15 +194,19 @@ model Sale {
   tendered        Int?
   changeGiven     Int?
   oversellNote    String?
+  returnNote      String?
+  returnedAt      DateTime?
   idempotencyKey  String     @unique
   servedById      String?
   servedBy        User?      @relation(fields: [servedById], references: [id], onDelete: SetNull)
   createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
   lines           SaleLine[]
 
   @@index([sessionId])
   @@index([createdAt])
   @@index([customerId])
+  @@index([status])
 }
 
 model SaleLine {
@@ -217,6 +222,7 @@ model SaleLine {
   unitPrice       Int
   lineTotal       Int
   costStamped     Int     @default(0)
+  returnedQty     Int     @default(0)
 
   @@index([saleId])
   @@index([variantId])

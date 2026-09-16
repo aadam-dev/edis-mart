@@ -21,7 +21,7 @@ export default async function AdminReportsPage() {
 
   const [tillSales, webOrders, saleLines, variants] = await Promise.all([
     prisma.sale.findMany({
-      where: { createdAt: { gte: since30 } },
+      where: { createdAt: { gte: since30 }, status: "completed" },
       include: { lines: true },
     }),
     prisma.order.findMany({
@@ -32,7 +32,9 @@ export default async function AdminReportsPage() {
       include: { items: true },
     }),
     prisma.saleLine.findMany({
-      where: { sale: { createdAt: { gte: since30 } } },
+      where: {
+        sale: { createdAt: { gte: since30 }, status: "completed" },
+      },
       include: { variant: { include: { product: true } } },
     }),
     prisma.variant.findMany({ include: { product: true } }),

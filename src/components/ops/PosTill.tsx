@@ -382,7 +382,8 @@ export function PosTill({ userName }: { userName: string }) {
       setError(data.error || "Charge failed");
       return;
     }
-    setLastSaleId(data.sale.id);
+    const saleId = data.sale.id as string;
+    setLastSaleId(saleId);
     setCart([]);
     setMomoRef("");
     setBankRef("");
@@ -395,6 +396,7 @@ export function PosTill({ userName }: { userName: string }) {
     setOversellWarn("");
     setSplitPay(false);
     setSalePanel(false);
+    window.open(`/pos/receipt/${saleId}`, "_blank", "noopener,noreferrer");
     await load();
   };
 
@@ -503,8 +505,14 @@ export function PosTill({ userName }: { userName: string }) {
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <Link
-                href="/admin"
+                href="/admin/orders"
                 className="hidden rounded-full border border-mist px-3 py-2 text-xs font-semibold sm:inline"
+              >
+                Orders
+              </Link>
+              <Link
+                href="/admin"
+                className="hidden rounded-full border border-mist px-3 py-2 text-xs font-semibold lg:inline"
               >
                 Ops
               </Link>
@@ -875,13 +883,31 @@ export function PosTill({ userName }: { userName: string }) {
           </div>
 
           {lastSaleId && (
-            <Link
-              href={`/pos/receipt/${lastSaleId}`}
-              target="_blank"
-              className="block text-center text-xs font-semibold text-oat/80 underline sm:text-sm"
-            >
-              Open last receipt
-            </Link>
+            <div className="space-y-1 text-center">
+              <p className="text-[11px] text-oat/55">Last sale charged</p>
+              <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs font-semibold sm:text-sm">
+                <Link
+                  href={`/pos/receipt/${lastSaleId}`}
+                  target="_blank"
+                  className="text-oat underline"
+                >
+                  Receipt
+                </Link>
+                <Link
+                  href={`/pos/receipt/${lastSaleId}?print=1`}
+                  target="_blank"
+                  className="text-oat/80 underline"
+                >
+                  Print / PDF
+                </Link>
+                <Link
+                  href={`/admin/orders/sale/${lastSaleId}`}
+                  className="text-oat/70 underline"
+                >
+                  Manage
+                </Link>
+              </div>
+            </div>
           )}
           <div className="hidden sm:block">
             <OpsCredit />
