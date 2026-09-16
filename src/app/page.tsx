@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { getFeaturedProducts } from "@/data/catalog";
+import { getFeaturedProductsFromDb } from "@/lib/catalog";
 import { HomeHero } from "@/components/motion/HomeHero";
 import { Marquee } from "@/components/motion/Marquee";
 import { TaglineReveal } from "@/components/motion/TaglineReveal";
@@ -8,9 +7,10 @@ import { ProductCard } from "@/components/ProductCard";
 import { ButtonLink } from "@/components/ButtonLink";
 import { Reveal } from "@/components/motion/Reveal";
 import { site } from "@/lib/site";
+import Image from "next/image";
 
-export default function HomePage() {
-  const products = getFeaturedProducts();
+export default async function HomePage() {
+  const products = await getFeaturedProductsFromDb();
 
   const jsonLd = {
     "@context": "https://schema.org",

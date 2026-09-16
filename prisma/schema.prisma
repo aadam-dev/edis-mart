@@ -17,6 +17,7 @@ model Product {
   skuBase     String
   channel     String    @default("retail") // retail | wholesale | inquiry
   featured    Boolean   @default(false)
+  visible     Boolean   @default(true)
   sortOrder   Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -24,16 +25,21 @@ model Product {
 }
 
 model Variant {
-  id              String   @id @default(cuid())
+  id              String          @id @default(cuid())
   productId       String
-  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product         Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
   size            String
-  sku             String   @unique
+  sku             String          @unique
   retailPrice     Int? // pesewas
   wholesalePrice  Int? // pesewas
-  stock           Int      @default(100)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  avgCostPesewas  Int             @default(0)
+  stock           Int             @default(0) // denormalized on-hand cache
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  movements       StockMovement[]
+  purchaseLines   PurchaseLine[]
+  saleLines       SaleLine[]
+  orderItems      OrderItem[]
 
   @@index([productId])
 }
@@ -63,9 +69,11 @@ model Order {
 }
 
 model OrderItem {
-  id          String @id @default(cuid())
+  id          String   @id @default(cuid())
   orderId     String
-  order       Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId   String?
+  variant     Variant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
   productSlug String
   productName String
   size        String
@@ -74,4 +82,135 @@ model OrderItem {
   lineTotal   Int
 
   @@index([orderId])
+  @@index([variantId])
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  name         String
+  passwordHash String
+  role         String          @default("owner") // owner | manager | till
+  active       Boolean         @default(true)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  movements    StockMovement[]
+  purchases    Purchase[]
+  sessions     TillSession[]
+  sales        Sale[]
+}
+
+model StockMovement {
+  id              String   @id @default(cuid())
+  variantId       String
+  variant         Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  type            String // opening | received | sold | adjusted | damaged
+  qty             Int // signed: + in, - out
+  unitCostPesewas Int?
+  refType         String? // order | sale | purchase | adjust
+  refId           String?
+  note            String?
+  createdById     String?
+  createdBy       User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt       DateTime @default(now())
+
+  @@index([variantId])
+  @@index([createdAt])
+  @@index([refType, refId])
+}
+
+model Purchase {
+  id           String         @id @default(cuid())
+  supplier     String
+  notes        String?
+  freightPesewas Int          @default(0)
+  status       String         @default("draft") // draft | received
+  receivedAt   DateTime?
+  createdById  String?
+  createdBy    User?          @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  lines        PurchaseLine[]
+}
+
+model PurchaseLine {
+  id              String   @id @default(cuid())
+  purchaseId      String
+  purchase        Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  variantId       String
+  variant         Variant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  qty             Int
+  unitCostPesewas Int
+  lineTotal       Int
+
+  @@index([purchaseId])
+  @@index([variantId])
+}
+
+model TillSession {
+  id           String    @id @default(cuid())
+  status       String    @default("open") // open | closed
+  floatCash    Int       @default(0)
+  countedCash  Int?
+  expectedCash Int?
+  openedAt     DateTime  @default(now())
+  closedAt     DateTime?
+  openedById   String?
+  openedBy     User?     @relation(fields: [openedById], references: [id], onDelete: SetNull)
+  sales        Sale[]
+
+  @@index([status])
+}
+
+model Sale {
+  id              String     @id @default(cuid())
+  sessionId       String
+  session         TillSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  receiptNumber   String     @unique
+  paymentMethod   String // momo | cash | other
+  momoRef         String?
+  customerName    String?
+  customerPhone   String?
+  subtotal        Int
+  total           Int
+  tendered        Int?
+  changeGiven     Int?
+  oversellNote    String?
+  idempotencyKey  String     @unique
+  servedById      String?
+  servedBy        User?      @relation(fields: [servedById], references: [id], onDelete: SetNull)
+  createdAt       DateTime   @default(now())
+  lines           SaleLine[]
+
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+model SaleLine {
+  id              String  @id @default(cuid())
+  saleId          String
+  sale            Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  variantId       String
+  variant         Variant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+  productName     String
+  size            String
+  sku             String
+  quantity        Int
+  unitPrice       Int
+  lineTotal       Int
+  costStamped     Int     @default(0)
+
+  @@index([saleId])
+  @@index([variantId])
+}
+
+model ReceiptCounter {
+  id      String @id @default("default")
+  year    Int
+  lastSeq Int    @default(0)
+}
+
+model Setting {
+  key   String @id
+  value String
 }

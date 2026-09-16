@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { getVariantBySku } from "@/data/catalog";
+import { getVariantBySkuFromDb } from "@/lib/catalog";
 import { createOrderRecord } from "@/lib/orders";
 
 const bodySchema = z.object({
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     const data = bodySchema.parse(await req.json());
 
     for (const item of data.items) {
-      const match = getVariantBySku(item.sku);
+      const match = await getVariantBySkuFromDb(item.sku);
       if (!match) {
         return NextResponse.json(
           { error: `Unknown SKU ${item.sku}` },
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const order = createOrderRecord({
+    const order = await createOrderRecord({
       paymentMethod: data.paymentMethod,
       customerName: data.customerName,
       customerEmail: data.customerEmail,

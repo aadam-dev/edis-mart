@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProducts } from "@/data/catalog";
+import { getProductsFromDb } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
     "Browse coconut flakes, mango chips, and wholesale sizes in GHS.",
 };
 
-export default function ShopPage() {
-  const products = getProducts();
+export default async function ShopPage() {
+  const products = await getProductsFromDb();
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-16 md:px-6 md:py-24">
@@ -24,8 +24,8 @@ export default function ShopPage() {
       </Reveal>
       <div className="mt-16 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:mt-24 lg:grid-cols-3">
         {products.map((product, i) => (
-          <Reveal 
-            key={product.id} 
+          <Reveal
+            key={product.id}
             delay={i * 0.05}
             className={i % 3 === 1 ? "lg:mt-16" : ""}
           >

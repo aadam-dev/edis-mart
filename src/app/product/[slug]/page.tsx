@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProduct, getProducts } from "@/data/catalog";
+import { getProducts } from "@/data/catalog";
+import { getProductFromDb, getProductsFromDb } from "@/lib/catalog";
 import { ProductBuyBox } from "@/components/ProductBuyBox";
 import { ProductCard } from "@/components/ProductCard";
 import { formatGhs, site } from "@/lib/site";
@@ -14,7 +15,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductFromDb(slug);
   if (!product) return { title: "Product" };
   return {
     title: product.name,
@@ -29,10 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductFromDb(slug);
   if (!product) notFound();
 
-  const related = getProducts()
+  const related = (await getProductsFromDb())
     .filter((p) => p.slug !== slug)
     .slice(0, 3);
 

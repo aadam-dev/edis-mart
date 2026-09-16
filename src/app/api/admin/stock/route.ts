@@ -1,17 +1,25 @@
 import { NextResponse } from "next/server";
-
-function authorized(req: Request) {
-  const pwd = req.headers.get("x-admin-password");
-  return pwd && pwd === process.env.ADMIN_PASSWORD;
-}
+import { requireOpsUser } from "@/lib/auth";
+import { recordAdjust } from "@/lib/stock";
 
 export async function POST(req: Request) {
-  if (!authorized(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const user = await requireOpsUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { variantId, qtyDelta, note } = (await req.json()) as {
+    variantId?: string;
+    qtyDelta?: number;
+    note?: string;
+  };
+  if (!variantId || !qtyDelta || !note?.trim()) {
+    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
-  // Catalog is code-backed on Vercel; stock edits are local-only until Postgres lands.
-  return NextResponse.json({
-    ok: true,
-    note: "Stock is catalog-backed. Connect Postgres to persist stock edits.",
+
+  const movement = await recordAdjust({
+    variantId,
+    qtyDelta,
+    note,
+    createdById: user.id,
   });
+  return NextResponse.json({ movement });
 }
