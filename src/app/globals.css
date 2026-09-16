@@ -93,3 +93,43 @@ p {
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
+
+@keyframes harvest {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes harvest-reverse {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-harvest {
+  animation: harvest 52s linear infinite;
+}
+
+.animate-harvest-reverse {
+  animation: harvest-reverse 58s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-harvest,
+  .animate-harvest-reverse {
+    animation: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .animate-harvest,
+  .group:hover .animate-harvest-reverse {
+    animation-play-state: paused;
+  }
+}

@@ -45,7 +45,7 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <HomeHero />
-      <Marquee text="100% NATURAL ✳ NO PRESERVATIVES ✳ SUN-DRIED IN GHANA ✳" />
+      <Marquee />
 
       <section className="mx-auto max-w-[1400px] px-4 py-24 md:px-6 md:py-36">
         <Reveal>

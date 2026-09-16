@@ -41,6 +41,7 @@ Redesign overhaul of a Ghanaian premium dried-fruit DTC store for health-conscio
 - Full customer accounts / loyalty
 - Multi-currency / international shipping
 - Headless CMS
+- Full till / POS (planned in `09-pos-and-back-office.md`)
 
 ## Success criteria
 

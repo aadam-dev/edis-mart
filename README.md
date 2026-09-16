@@ -22,6 +22,7 @@ Migration brain lives in `docs/`:
 - `00-brief.md` … `08-cutover.md`
 - Payments: `docs/06-payments.md`
 - SEO: `docs/07-seo.md`
+- POS + back office plan: `docs/09-pos-and-back-office.md` (not built yet)
 
 ## Stack
 
