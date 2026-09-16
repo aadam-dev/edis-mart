@@ -14,6 +14,7 @@ import {
   Storefront,
   SignOut,
 } from "@phosphor-icons/react";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const nav = [
   { href: "/admin", label: "Today", icon: House },
@@ -40,9 +41,11 @@ export function AdminNav({ userName }: { userName: string }) {
   return (
     <aside className="flex w-full flex-col border-b border-mist bg-forest text-oat md:min-h-dvh md:w-56 md:border-b-0 md:border-r md:border-mist/20">
       <div className="px-4 py-5">
-        <p className="font-display text-2xl font-medium tracking-tight">Edis Mart</p>
-        <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-oat/50">
-          Ops · Yeskoko
+        <div className="inline-flex rounded-lg bg-oat/95 p-2">
+          <BrandLogo height={36} priority />
+        </div>
+        <p className="mt-3 text-[11px] uppercase tracking-[0.16em] text-oat/50">
+          Edis Mart ops
         </p>
       </div>
       <nav className="flex gap-1 overflow-x-auto px-2 pb-3 md:flex-1 md:flex-col md:overflow-visible md:px-3">

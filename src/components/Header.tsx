@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ShoppingBag, List, X } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useCart } from "@/store/cart";
 import { formatGhs } from "@/lib/site";
 
@@ -29,16 +29,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-mist/60 bg-oat/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4 md:h-[72px] md:px-6">
-        <Link href="/" className="focus-ring flex items-center gap-2">
-          <Image
-            src="/brand/logo.jpg"
-            alt="Yeskoko"
-            width={140}
-            height={44}
-            className="h-9 w-auto object-contain md:h-10"
-            priority
-          />
-        </Link>
+        <BrandLogo height={44} priority className="md:h-11" />
 
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
           {links.map((link) => {

@@ -36,9 +36,11 @@ yarn-error.log*
 .env.*.local
 !.env.example
 
-# database
-prisma/*.db
+# database (keep prisma/deploy.db tracked for Vercel SQLite bootstrap)
+prisma/dev.db
+prisma/dev.db-journal
 prisma/*.db-journal
+!prisma/deploy.db
 
 # agent skill dumps from tooling
 .claude/
