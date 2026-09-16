@@ -10,7 +10,7 @@ export async function GET() {
     where: { status: "open" },
     orderBy: { openedAt: "desc" },
     include: {
-      sales: { orderBy: { createdAt: "desc" }, take: 20 },
+      sales: { orderBy: { createdAt: "desc" }, take: 50 },
     },
   });
 
@@ -20,7 +20,18 @@ export async function GET() {
     orderBy: { sortOrder: "asc" },
   });
 
-  return NextResponse.json({ session, products, user });
+  let expectedCash: number | null = null;
+  if (session) {
+    const cashFromSales = session.sales.reduce((sum, s) => {
+      if (s.cashPesewas > 0) return sum + s.cashPesewas;
+      // Legacy rows before split columns
+      if (s.paymentMethod === "cash") return sum + s.total;
+      return sum;
+    }, 0);
+    expectedCash = session.floatCash + cashFromSales;
+  }
+
+  return NextResponse.json({ session, products, user, expectedCash });
 }
 
 export async function POST(req: Request) {
@@ -31,6 +42,7 @@ export async function POST(req: Request) {
     action?: "open" | "close";
     floatCash?: number;
     countedCash?: number;
+    sessionId?: string;
   };
 
   if (body.action === "open") {
@@ -51,17 +63,22 @@ export async function POST(req: Request) {
   }
 
   if (body.action === "close") {
-    const session = await prisma.tillSession.findFirst({
-      where: { status: "open" },
+    if (!body.sessionId) {
+      return NextResponse.json({ error: "sessionId required" }, { status: 400 });
+    }
+    const session = await prisma.tillSession.findUnique({
+      where: { id: body.sessionId },
       include: { sales: true },
     });
-    if (!session) {
+    if (!session || session.status !== "open") {
       return NextResponse.json({ error: "No open session" }, { status: 400 });
     }
-    const cashSales = session.sales
-      .filter((s) => s.paymentMethod === "cash")
-      .reduce((sum, s) => sum + s.total, 0);
-    const expectedCash = session.floatCash + cashSales;
+    const cashFromSales = session.sales.reduce((sum, s) => {
+      if (s.cashPesewas > 0) return sum + s.cashPesewas;
+      if (s.paymentMethod === "cash") return sum + s.total;
+      return sum;
+    }, 0);
+    const expectedCash = session.floatCash + cashFromSales;
     const closed = await prisma.tillSession.update({
       where: { id: session.id },
       data: {
@@ -71,7 +88,7 @@ export async function POST(req: Request) {
         expectedCash,
       },
     });
-    return NextResponse.json({ session: closed });
+    return NextResponse.json({ session: closed, expectedCash });
   }
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });

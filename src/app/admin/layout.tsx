@@ -15,7 +15,7 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-dvh flex-col bg-oat md:flex-row">
-      <AdminNav userName={user.name} />
+      <AdminNav userName={user.name} userRole={user.role} />
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex-1 px-4 py-6 md:px-8 md:py-8">{children}</div>
         <footer className="border-t border-mist px-4 py-4 md:px-8">

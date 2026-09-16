@@ -100,6 +100,18 @@ model User {
   sales        Sale[]
 }
 
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String   @unique
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales     Sale[]
+
+  @@index([name])
+}
+
 model StockMovement {
   id              String   @id @default(cuid())
   variantId       String
@@ -167,8 +179,13 @@ model Sale {
   sessionId       String
   session         TillSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   receiptNumber   String     @unique
-  paymentMethod   String // momo | cash | other
-  momoRef         String?
+  paymentMethod   String // momo | cash | bank | split
+  momoRef         String? // optional MoMo or bank transfer reference
+  cashPesewas     Int        @default(0)
+  momoPesewas     Int        @default(0)
+  bankPesewas     Int        @default(0)
+  customerId      String?
+  customer        Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
   customerName    String?
   customerPhone   String?
   subtotal        Int
@@ -184,6 +201,7 @@ model Sale {
 
   @@index([sessionId])
   @@index([createdAt])
+  @@index([customerId])
 }
 
 model SaleLine {

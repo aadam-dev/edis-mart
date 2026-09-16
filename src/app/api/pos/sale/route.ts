@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { requireOpsUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getOnHand, nextReceiptNumber, recordSaleMovement } from "@/lib/stock";
+import { normalizeGhPhone, resolveTillPrice } from "@/lib/site";
+
+type PayMethod = "momo" | "cash" | "bank";
 
 export async function POST(req: Request) {
   const user = await requireOpsUser();
@@ -10,8 +13,12 @@ export async function POST(req: Request) {
   const body = (await req.json()) as {
     sessionId?: string;
     idempotencyKey?: string;
-    paymentMethod?: "momo" | "cash" | "other";
+    paymentMethod?: PayMethod | "split";
     momoRef?: string;
+    bankRef?: string;
+    cashPesewas?: number;
+    momoPesewas?: number;
+    bankPesewas?: number;
     customerName?: string;
     customerPhone?: string;
     tendered?: number;
@@ -22,17 +29,27 @@ export async function POST(req: Request) {
     }[];
   };
 
-  if (
-    !body.sessionId ||
-    !body.idempotencyKey ||
-    !body.paymentMethod ||
-    !body.items?.length
-  ) {
+  if (!body.sessionId || !body.idempotencyKey || !body.items?.length) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  if (body.paymentMethod === "momo" && !body.momoRef?.trim()) {
-    return NextResponse.json({ error: "MoMo reference required" }, { status: 400 });
+  const name = body.customerName?.trim() || "";
+  const phoneRaw = body.customerPhone?.trim() || "";
+  let phone: string | null = null;
+  if (phoneRaw) {
+    phone = normalizeGhPhone(phoneRaw);
+    if (!phone) {
+      return NextResponse.json(
+        { error: "Enter a valid Ghana phone (e.g. 0549092316)" },
+        { status: 400 },
+      );
+    }
+  }
+  if (name && !phone) {
+    return NextResponse.json(
+      { error: "Phone is required when a customer name is set" },
+      { status: 400 },
+    );
   }
 
   const existing = await prisma.sale.findUnique({
@@ -63,6 +80,12 @@ export async function POST(req: Request) {
   }[] = [];
 
   for (const item of body.items) {
+    if (!Number.isInteger(item.quantity) || item.quantity < 1) {
+      return NextResponse.json(
+        { error: "Each line needs quantity ≥ 1" },
+        { status: 400 },
+      );
+    }
     const variant = await prisma.variant.findUnique({
       where: { id: item.variantId },
       include: { product: true },
@@ -70,6 +93,17 @@ export async function POST(req: Request) {
     if (!variant) {
       return NextResponse.json(
         { error: `Unknown variant ${item.variantId}` },
+        { status: 400 },
+      );
+    }
+    const expected = resolveTillPrice(
+      variant.product.channel,
+      variant.retailPrice,
+      variant.wholesalePrice,
+    );
+    if (expected == null || expected !== item.unitPrice) {
+      return NextResponse.json(
+        { error: `Price mismatch for ${variant.sku}` },
         { status: 400 },
       );
     }
@@ -88,15 +122,69 @@ export async function POST(req: Request) {
   }
 
   const subtotal = lineData.reduce((s, l) => s + l.lineTotal, 0);
+
+  let cashPesewas = Math.max(0, Math.round(body.cashPesewas ?? 0));
+  let momoPesewas = Math.max(0, Math.round(body.momoPesewas ?? 0));
+  let bankPesewas = Math.max(0, Math.round(body.bankPesewas ?? 0));
+
+  // Single-method shorthand: put full total on that method
+  if (
+    body.paymentMethod &&
+    body.paymentMethod !== "split" &&
+    cashPesewas + momoPesewas + bankPesewas === 0
+  ) {
+    if (body.paymentMethod === "cash") cashPesewas = subtotal;
+    else if (body.paymentMethod === "momo") momoPesewas = subtotal;
+    else if (body.paymentMethod === "bank") bankPesewas = subtotal;
+  }
+
+  const paidSum = cashPesewas + momoPesewas + bankPesewas;
+  if (paidSum !== subtotal) {
+    return NextResponse.json(
+      {
+        error: `Payments must total ${subtotal} pesewas (got ${paidSum})`,
+      },
+      { status: 400 },
+    );
+  }
+
+  const methodsUsed = [
+    cashPesewas > 0 ? "cash" : null,
+    momoPesewas > 0 ? "momo" : null,
+    bankPesewas > 0 ? "bank" : null,
+  ].filter(Boolean) as PayMethod[];
+
+  if (methodsUsed.length === 0) {
+    return NextResponse.json({ error: "Add a payment amount" }, { status: 400 });
+  }
+
+  const paymentMethod: PayMethod | "split" =
+    methodsUsed.length > 1 ? "split" : methodsUsed[0];
+
   const oversellNotes = lineData
     .filter((l) => l.quantity > l.onHand)
-    .map(
-      (l) =>
-        `${l.sku}: sold ${l.quantity}, on-hand ${l.onHand}`,
-    );
-  const tendered = body.tendered ?? subtotal;
+    .map((l) => `${l.sku}: sold ${l.quantity}, on-hand ${l.onHand}`);
+
+  const tendered =
+    cashPesewas > 0
+      ? Math.max(body.tendered ?? cashPesewas, cashPesewas)
+      : body.tendered ?? subtotal;
   const changeGiven =
-    body.paymentMethod === "cash" ? Math.max(0, tendered - subtotal) : 0;
+    cashPesewas > 0 ? Math.max(0, tendered - cashPesewas) : 0;
+
+  const paymentRef =
+    [body.momoRef?.trim(), body.bankRef?.trim()].filter(Boolean).join(" · ") ||
+    null;
+
+  let customerId: string | null = null;
+  if (phone && name) {
+    const customer = await prisma.customer.upsert({
+      where: { phone },
+      create: { name, phone },
+      update: { name },
+    });
+    customerId = customer.id;
+  }
 
   const receiptNumber = await nextReceiptNumber();
 
@@ -104,10 +192,14 @@ export async function POST(req: Request) {
     data: {
       sessionId: body.sessionId,
       receiptNumber,
-      paymentMethod: body.paymentMethod,
-      momoRef: body.momoRef || null,
-      customerName: body.customerName || null,
-      customerPhone: body.customerPhone || null,
+      paymentMethod,
+      momoRef: paymentRef,
+      cashPesewas,
+      momoPesewas,
+      bankPesewas,
+      customerId,
+      customerName: name || null,
+      customerPhone: phone,
       subtotal,
       total: subtotal,
       tendered,

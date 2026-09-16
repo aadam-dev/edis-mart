@@ -58,9 +58,15 @@ export default async function ReceiptPage({
               <span>{sale.customerName}</span>
             </p>
           )}
+          {sale.customerPhone && (
+            <p className="flex justify-between">
+              <span>Phone</span>
+              <span className="tabular-nums">{sale.customerPhone}</span>
+            </p>
+          )}
           {sale.momoRef && (
             <p className="flex justify-between">
-              <span>MoMo ref</span>
+              <span>Payment ref</span>
               <span className="tabular-nums">{sale.momoRef}</span>
             </p>
           )}
@@ -85,11 +91,35 @@ export default async function ReceiptPage({
             <span className="tabular-nums">{formatGhs(sale.total)}</span>
           </p>
           <p className="flex justify-between text-xs capitalize text-forest/65">
-            <span>Paid by {sale.paymentMethod}</span>
-            {sale.tendered != null && sale.paymentMethod === "cash" && (
+            <span>
+              Paid by {sale.paymentMethod}
+              {sale.paymentMethod === "split" && (
+                <span className="normal-case">
+                  {" "}
+                  (
+                  {[
+                    sale.cashPesewas > 0
+                      ? `cash ${formatGhs(sale.cashPesewas)}`
+                      : null,
+                    sale.momoPesewas > 0
+                      ? `MoMo ${formatGhs(sale.momoPesewas)}`
+                      : null,
+                    sale.bankPesewas > 0
+                      ? `bank ${formatGhs(sale.bankPesewas)}`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                  )
+                </span>
+              )}
+            </span>
+            {sale.tendered != null && sale.cashPesewas > 0 && (
               <span>
                 Tendered {formatGhs(sale.tendered)}
-                {sale.changeGiven ? ` · Change ${formatGhs(sale.changeGiven)}` : ""}
+                {sale.changeGiven
+                  ? ` · Change ${formatGhs(sale.changeGiven)}`
+                  : ""}
               </span>
             )}
           </p>

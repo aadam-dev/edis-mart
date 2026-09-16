@@ -28,8 +28,8 @@ export default async function AdminStockPage() {
           Ledger by size
         </h1>
         <p className="mt-2 max-w-xl text-sm text-forest/60">
-          On-hand is the sum of movements. Adjust with a note - do not invent stock
-          numbers.
+          Finished Yeskoko packs. Production batches add stock; till and web sales
+          draw it down. Adjust with a note — do not invent numbers.
         </p>
       </div>
 

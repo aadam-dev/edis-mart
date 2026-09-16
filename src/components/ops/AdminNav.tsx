@@ -13,6 +13,7 @@ import {
   Users,
   Storefront,
   SignOut,
+  AddressBook,
 } from "@phosphor-icons/react";
 import { BrandLogo } from "@/components/BrandLogo";
 
@@ -20,15 +21,22 @@ const nav = [
   { href: "/admin", label: "Today", icon: House },
   { href: "/pos", label: "Sell", icon: Storefront, external: true },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
+  { href: "/admin/customers", label: "Customers", icon: AddressBook },
   { href: "/admin/catalogue", label: "Catalogue", icon: Package },
   { href: "/admin/stock", label: "Stock", icon: Warehouse },
-  { href: "/admin/purchases", label: "Purchases", icon: Truck },
-  { href: "/admin/reports", label: "Reports", icon: ChartLine },
+  { href: "/admin/purchases", label: "Production", icon: Truck },
+  { href: "/admin/reports", label: "Reports", icon: ChartLine, ownerOnly: true },
   { href: "/admin/settings", label: "Settings", icon: Gear },
-  { href: "/admin/people", label: "People", icon: Users },
+  { href: "/admin/people", label: "People", icon: Users, ownerOnly: true },
 ];
 
-export function AdminNav({ userName }: { userName: string }) {
+export function AdminNav({
+  userName,
+  userRole,
+}: {
+  userName: string;
+  userRole: string;
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -37,6 +45,11 @@ export function AdminNav({ userName }: { userName: string }) {
     router.push("/admin/login");
     router.refresh();
   };
+
+  const items = nav.filter((item) => {
+    if (item.ownerOnly && userRole !== "owner") return false;
+    return true;
+  });
 
   return (
     <aside className="flex w-full flex-col border-b border-mist bg-forest text-oat md:min-h-dvh md:w-56 md:border-b-0 md:border-r md:border-mist/20">
@@ -49,7 +62,7 @@ export function AdminNav({ userName }: { userName: string }) {
         </p>
       </div>
       <nav className="flex gap-1 overflow-x-auto px-2 pb-3 md:flex-1 md:flex-col md:overflow-visible md:px-3">
-        {nav.map((item) => {
+        {items.map((item) => {
           const Icon = item.icon;
           const active =
             item.href === "/admin"

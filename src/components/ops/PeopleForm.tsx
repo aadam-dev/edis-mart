@@ -10,12 +10,14 @@ export function PeopleForm() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("manager");
   const [error, setError] = useState("");
+  const [ok, setOk] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     setError("");
+    setOk(false);
     const res = await fetch("/api/admin/people", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -30,6 +32,7 @@ export function PeopleForm() {
     setName("");
     setEmail("");
     setPassword("");
+    setOk(true);
     router.refresh();
   };
 
@@ -69,6 +72,9 @@ export function PeopleForm() {
         <option value="owner">Owner</option>
       </select>
       {error && <p className="text-sm text-clay">{error}</p>}
+      {ok && !error && (
+        <p className="text-sm text-forest/60">Person created</p>
+      )}
       <button
         type="submit"
         disabled={busy}
