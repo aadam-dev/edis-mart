@@ -13,7 +13,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-- Admin / ops: `/admin/login` (password from `.env` `ADMIN_PASSWORD`)
+- Admin / ops: `/admin/login`
+  - `admin@edismart.com` / `admintest`
+  - `mavis@edismart.com` / `yeskoko123`
 - Till: `/pos` (same session after login)
 
 ## Docs

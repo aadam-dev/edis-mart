@@ -112,15 +112,25 @@ async function main() {
   await prisma.setting.deleteMany();
   await prisma.user.deleteMany();
 
-  const ownerPass = process.env.ADMIN_PASSWORD || "yeskoko-admin";
-  const owner = await prisma.user.create({
+  const admin = await prisma.user.create({
     data: {
-      email: process.env.OWNER_EMAIL || "owner@edismartgh.com",
-      name: "Edis Mart Owner",
-      passwordHash: hashPassword(ownerPass),
+      email: "admin@edismart.com",
+      name: "Edis Mart Admin",
+      passwordHash: hashPassword("admintest"),
       role: "owner",
     },
   });
+
+  await prisma.user.create({
+    data: {
+      email: "mavis@edismart.com",
+      name: "Mavis Walker Blagodzi",
+      passwordHash: hashPassword("yeskoko123"),
+      role: "owner",
+    },
+  });
+
+  const owner = admin;
 
   for (const p of products) {
     const { variants, ...product } = p;
@@ -177,7 +187,10 @@ async function main() {
     ],
   });
 
-  console.log(`Seeded ${products.length} products + owner ${owner.email}`);
+  console.log(`Seeded ${products.length} products`);
+  console.log("Test logins:");
+  console.log("  admin@edismart.com / admintest");
+  console.log("  mavis@edismart.com / yeskoko123");
 }
 
 main()

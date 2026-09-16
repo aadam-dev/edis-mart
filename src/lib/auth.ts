@@ -104,34 +104,13 @@ export async function requireOpsUser() {
   };
 }
 
-/** Legacy header password bridge during cutover */
-export async function authenticatePassword(password: string) {
-  const owner = await prisma.user.findFirst({
-    where: { role: "owner", active: true },
-  });
-  if (owner && verifyPassword(password, owner.passwordHash)) {
-    return {
-      id: owner.id,
-      email: owner.email,
-      name: owner.name,
-      role: owner.role as SessionUser["role"],
-    };
-  }
-  const envPass = process.env.ADMIN_PASSWORD || "yeskoko-admin";
-  if (password === envPass) {
-    // bootstrap: ensure owner exists
-    const email = process.env.OWNER_EMAIL || "owner@edismartgh.com";
-    let user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email,
-          name: "Edis Mart Owner",
-          passwordHash: hashPassword(envPass),
-          role: "owner",
-        },
-      });
-    }
+/** Email + password login against User table */
+export async function authenticateCredentials(email: string, password: string) {
+  const normalized = email.trim().toLowerCase();
+  if (!normalized || !password) return null;
+
+  const user = await prisma.user.findUnique({ where: { email: normalized } });
+  if (user && user.active && verifyPassword(password, user.passwordHash)) {
     return {
       id: user.id,
       email: user.email,
@@ -139,5 +118,41 @@ export async function authenticatePassword(password: string) {
       role: user.role as SessionUser["role"],
     };
   }
+
+  // Legacy env bootstrap: ADMIN_PASSWORD alone still works for the seeded owner email
+  const envPass = process.env.ADMIN_PASSWORD || "yeskoko-admin";
+  if (password === envPass) {
+    const ownerEmail = (
+      process.env.OWNER_EMAIL || "admin@edismart.com"
+    ).toLowerCase();
+    if (normalized === ownerEmail || !normalized) {
+      let owner = await prisma.user.findUnique({ where: { email: ownerEmail } });
+      if (!owner) {
+        owner = await prisma.user.create({
+          data: {
+            email: ownerEmail,
+            name: "Edis Mart Admin",
+            passwordHash: hashPassword(envPass),
+            role: "owner",
+          },
+        });
+      }
+      return {
+        id: owner.id,
+        email: owner.email,
+        name: owner.name,
+        role: owner.role as SessionUser["role"],
+      };
+    }
+  }
+
   return null;
+}
+
+/** @deprecated prefer authenticateCredentials */
+export async function authenticatePassword(password: string) {
+  return authenticateCredentials(
+    process.env.OWNER_EMAIL || "admin@edismart.com",
+    password,
+  );
 }
