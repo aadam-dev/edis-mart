@@ -9,10 +9,10 @@ type Props = {
 
 const styles = {
   primary:
-    "bg-clay text-oat hover:bg-forest active:scale-[0.98]",
+    "bg-forest text-oat hover:bg-clay active:scale-[0.98]",
   secondary:
-    "border border-forest/20 bg-transparent text-forest hover:border-clay hover:text-clay active:scale-[0.98]",
-  ghost: "text-clay underline-offset-4 hover:underline",
+    "border border-forest/20 bg-transparent text-forest hover:border-forest hover:bg-forest/5 active:scale-[0.98]",
+  ghost: "text-forest underline-offset-4 hover:underline",
 };
 
 export function ButtonLink({

@@ -14,20 +14,28 @@ import {
   Storefront,
   SignOut,
   AddressBook,
+  GlobeHemisphereWest,
+  Handshake,
+  ShieldCheck,
+  Factory,
 } from "@phosphor-icons/react";
 import { BrandLogo } from "@/components/BrandLogo";
 
 const nav = [
-  { href: "/admin", label: "Today", icon: House },
-  { href: "/pos", label: "Sell", icon: Storefront, external: true },
-  { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/admin/customers", label: "Customers", icon: AddressBook },
-  { href: "/admin/catalogue", label: "Catalogue", icon: Package },
-  { href: "/admin/stock", label: "Stock", icon: Warehouse },
-  { href: "/admin/purchases", label: "Production", icon: Truck },
-  { href: "/admin/reports", label: "Reports", icon: ChartLine, ownerOnly: true },
-  { href: "/admin/settings", label: "Settings", icon: Gear },
-  { href: "/admin/people", label: "People", icon: Users, ownerOnly: true },
+  { href: "/admin", label: "Today", icon: House, roles: ["owner", "manager", "till"] },
+  { href: "/pos", label: "Sell", icon: Storefront, roles: ["owner", "manager", "till"] },
+  { href: "/admin/orders", label: "Orders", icon: ShoppingCart, roles: ["owner", "manager", "till"] },
+  { href: "/admin/customers", label: "Customers", icon: AddressBook, roles: ["owner", "manager", "till"] },
+  { href: "/admin/catalogue", label: "Catalogue", icon: Package, roles: ["owner", "manager"] },
+  { href: "/admin/stock", label: "Stock", icon: Warehouse, roles: ["owner", "manager"] },
+  { href: "/admin/purchases", label: "Finished packs", icon: Truck, roles: ["owner", "manager"] },
+  { href: "/admin/production", label: "Batches", icon: Factory, roles: ["owner", "manager"] },
+  { href: "/admin/partners", label: "Partners", icon: Handshake, roles: ["owner", "manager"] },
+  { href: "/admin/trade", label: "Trade leads", icon: GlobeHemisphereWest, roles: ["owner", "manager"] },
+  { href: "/admin/compliance", label: "Compliance", icon: ShieldCheck, roles: ["owner", "manager"] },
+  { href: "/admin/reports", label: "Reports", icon: ChartLine, roles: ["owner"] },
+  { href: "/admin/settings", label: "Settings", icon: Gear, roles: ["owner", "manager"] },
+  { href: "/admin/people", label: "People", icon: Users, roles: ["owner"] },
 ];
 
 export function AdminNav({
@@ -46,10 +54,7 @@ export function AdminNav({
     router.refresh();
   };
 
-  const items = nav.filter((item) => {
-    if (item.ownerOnly && userRole !== "owner") return false;
-    return true;
-  });
+  const items = nav.filter((item) => item.roles.includes(userRole));
 
   return (
     <aside className="flex w-full flex-col border-b border-mist bg-forest text-oat md:min-h-dvh md:w-56 md:border-b-0 md:border-r md:border-mist/20">

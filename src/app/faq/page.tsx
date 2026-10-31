@@ -1,36 +1,13 @@
 import type { Metadata } from "next";
+import { faqs } from "@/lib/content";
+import { absoluteUrl, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "FAQ",
-  description: "Shipping, payment, and wholesale answers for Yeskoko.",
+  description:
+    "Answers about Yeskoko ingredients, Ghana payments, wholesale, and export documentation.",
+  alternates: { canonical: absoluteUrl("/faq") },
 };
-
-const faqs = [
-  {
-    q: "How do I pay?",
-    a: "Card or Mobile Money through Paystack, cash on delivery in Accra, or WhatsApp order confirmation.",
-  },
-  {
-    q: "Do you deliver in Accra?",
-    a: "Yes. A flat Accra delivery fee is added at checkout. Pickup can be arranged when you leave a note.",
-  },
-  {
-    q: "What sizes do you sell?",
-    a: "Retail sizes from 50g to 1kg depending on the product. Wholesale packs are available on request.",
-  },
-  {
-    q: "Are there preservatives?",
-    a: "Yeskoko snacks are made without preservatives. Ingredients stay close to the fruit.",
-  },
-  {
-    q: "How do wholesale orders work?",
-    a: "Message us on WhatsApp with sizes and volume. We quote and confirm delivery from Accra.",
-  },
-  {
-    q: "Is pineapple chips available?",
-    a: "Packaging exists. Use Request a batch on the pineapple product page and we will quote.",
-  },
-];
 
 export default function FaqPage() {
   const jsonLd = {
@@ -44,17 +21,28 @@ export default function FaqPage() {
   };
 
   return (
-    <div className="mx-auto max-w-[800px] px-4 py-14 md:px-6 md:py-20">
+    <div className="mx-auto max-w-[860px] px-4 py-16 md:px-6 md:py-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <h1 className="font-display text-4xl font-semibold tracking-tight">FAQ</h1>
-      <dl className="mt-10 space-y-6">
+      <p className="label-caps text-sage">FAQ</p>
+      <h1 className="mt-4 font-display text-5xl font-medium tracking-tight text-forest md:text-6xl">
+        Straight answers
+      </h1>
+      <p className="mt-5 max-w-[48ch] text-base leading-relaxed text-forest/65">
+        From Accra retail to international trade — {site.company} keeps claims
+        tied to what we can document.
+      </p>
+      <dl className="mt-12 divide-y divide-mist border-t border-mist">
         {faqs.map((f) => (
-          <div key={f.q} className="border-b border-mist pb-6">
-            <dt className="font-display text-xl font-semibold">{f.q}</dt>
-            <dd className="mt-2 text-sm leading-relaxed text-ink/70">{f.a}</dd>
+          <div key={f.q} className="py-8">
+            <dt className="font-display text-2xl font-medium text-forest md:text-3xl">
+              {f.q}
+            </dt>
+            <dd className="mt-3 max-w-[58ch] text-base leading-relaxed text-forest/65">
+              {f.a}
+            </dd>
           </div>
         ))}
       </dl>

@@ -238,3 +238,210 @@ model Setting {
   key   String @id
   value String
 }
+
+/// Ops network — retailers, suppliers, agents, distributors, importers
+model Partner {
+  id                   String    @id @default(cuid())
+  sourceKey            String    @unique
+  kind                 String // retailer | supplier | sales_agent | distributor | importer
+  name                 String
+  location             String?
+  phone                String?
+  email                String?
+  status               String    @default("active") // active | inactive | needs_verification
+  verificationStatus   String    @default("unverified") // unverified | verified | disputed
+  relationshipMonths   Int?
+  relationshipStartedAt DateTime?
+  notes                String?
+  sourceDate           DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  offerings            SupplierOffering[]
+  account              RetailerAccount?
+  ledgerEntries        RetailerLedgerEntry[]
+
+  @@index([kind])
+  @@index([status])
+}
+
+model SupplierOffering {
+  id         String   @id @default(cuid())
+  partnerId  String
+  partner    Partner  @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  category   String // produce | packaging | material | service
+  itemName   String
+  unit       String?
+  notes      String?
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([partnerId])
+}
+
+model RetailerAccount {
+  id            String   @id @default(cuid())
+  partnerId     String   @unique
+  partner       Partner  @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  creditLimitPesewas Int @default(0)
+  paymentTermsDays Int   @default(0)
+  status        String   @default("open")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model RetailerLedgerEntry {
+  id              String   @id @default(cuid())
+  partnerId       String
+  partner         Partner  @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+  type            String // charge | payment | credit_note | adjustment
+  amountPesewas   Int
+  dueDate         DateTime?
+  reference       String?
+  idempotencyKey  String   @unique
+  note            String?
+  createdAt       DateTime @default(now())
+
+  @@index([partnerId])
+  @@index([createdAt])
+}
+
+model ProductionBatch {
+  id           String   @id @default(cuid())
+  batchCode    String   @unique
+  status       String   @default("planned") // planned | running | qa_hold | released | cancelled
+  plannedAt    DateTime?
+  startedAt    DateTime?
+  releasedAt   DateTime?
+  yieldNotes   String?
+  wasteNotes   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  inputs       BatchInput[]
+  outputs      BatchOutput[]
+  checks       QualityCheck[]
+}
+
+model BatchInput {
+  id          String          @id @default(cuid())
+  batchId     String
+  batch       ProductionBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  itemName    String
+  lot         String?
+  quantity    Float
+  unit        String
+  costPesewas Int             @default(0)
+  supplierName String?
+
+  @@index([batchId])
+}
+
+model BatchOutput {
+  id           String          @id @default(cuid())
+  batchId      String
+  batch        ProductionBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  variantId    String?
+  productName  String
+  size         String
+  plannedQty   Int             @default(0)
+  actualQty    Int             @default(0)
+  unitCostPesewas Int          @default(0)
+
+  @@index([batchId])
+}
+
+model QualityCheck {
+  id          String          @id @default(cuid())
+  batchId     String
+  batch       ProductionBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  checkpoint  String
+  result      String // pass | fail | hold
+  measuredValue String?
+  notes       String?
+  checkedAt   DateTime        @default(now())
+
+  @@index([batchId])
+}
+
+model EquipmentAsset {
+  id           String    @id @default(cuid())
+  name         String
+  capacity     String?
+  status       String    @default("in_use") // in_use | needs_repair | planned | retired
+  targetDate   DateTime?
+  acquiredDate DateTime?
+  costPesewas  Int?
+  notes        String?
+  sourceDate   DateTime?
+  verificationStatus String @default("baseline")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model ComplianceItem {
+  id           String    @id @default(cuid())
+  kind         String // sop | fda | certification | registration
+  title        String
+  authority    String?
+  status       String    @default("roadmap") // documented | current | roadmap | expired
+  issuedAt     DateTime?
+  expiresAt    DateTime?
+  targetDate   DateTime?
+  evidenceUrl  String?
+  ownerNote    String?
+  sourceDate   DateTime?
+  verificationStatus String @default("unverified")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([kind])
+  @@index([status])
+}
+
+model TradeInquiry {
+  id                 String   @id @default(cuid())
+  organization       String
+  contactName        String
+  email              String
+  phone              String?
+  targetMarket       String
+  productsJson       String   @default("[]")
+  volumeBand         String
+  privateLabel       Boolean  @default(false)
+  certificationNeeds String?
+  notes              String?
+  consent            Boolean  @default(false)
+  status             String   @default("new") // new | reviewing | replied | closed
+  ownerNotes         String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model BusinessBaseline {
+  id                 String   @id @default(cuid())
+  sourceKey          String   @unique
+  label              String
+  valueJson          String
+  sourceDate         DateTime
+  verificationStatus String   @default("needs_verification")
+  notes              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model AuditEvent {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actorEmail String?
+  action     String
+  entityType String?
+  entityId   String?
+  metadata   String?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([entityType, entityId])
+}

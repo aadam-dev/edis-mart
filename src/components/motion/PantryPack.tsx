@@ -97,15 +97,16 @@ export function PantryPack() {
             }}
           >
             <Image
-              src="/products/coconut-banner.jpg"
-              alt="Yeskoko jar, coconut flakes pouches, and pineapple chips"
+              src="/products/yeskoko.jpg"
+              alt="Yeskoko sweetened coconut flakes pouch with readable label"
               fill
-              className="object-cover"
+              className="object-contain bg-[#efe4d4] p-4 md:p-8"
               sizes="(max-width:768px) 100vw, 55vw"
             />
           </div>
           <p className="mt-4 text-sm text-forest/50 md:text-right">
-            Coconut flakes, chia coco, pineapple, and mango — Accra dried.
+            Labeled packs for coconut, chia coco, mango, and pineapple — Accra
+            dried.
           </p>
         </div>
       </div>

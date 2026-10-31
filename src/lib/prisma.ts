@@ -3,22 +3,29 @@ import path from "path";
 import { PrismaClient } from "@prisma/client";
 
 /**
- * On Vercel, DATABASE_URL is often unset and the FS is read-only except /tmp.
- * Ship a seeded SQLite snapshot (prisma/deploy.db) and copy it to /tmp at boot.
- * Replace with Postgres DATABASE_URL in production when ready for durable ops data.
+ * Prefer an explicit DATABASE_URL.
+ * - Production: set a managed Postgres URL (Neon/Supabase/etc). The ephemeral
+ *   Vercel SQLite `/tmp` copy is not durable for ops data.
+ * - Local: `file:./dev.db` under prisma/ is fine for development.
+ * See docs/12-storage-cutover.md.
  */
 function resolveDatabaseUrl() {
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
 
-  const snapshot = path.join(process.cwd(), "prisma", "deploy.db");
-  if (existsSync(snapshot)) {
-    const target = "/tmp/edis-mart.db";
-    try {
-      copyFileSync(snapshot, target);
-    } catch {
-      // Another concurrent instance may have created it
+  if (process.env.VERCEL) {
+    console.warn(
+      "[prisma] DATABASE_URL unset on Vercel — using ephemeral /tmp SQLite. Configure Postgres for durable ops.",
+    );
+    const snapshot = path.join(process.cwd(), "prisma", "deploy.db");
+    if (existsSync(snapshot)) {
+      const target = "/tmp/edis-mart.db";
+      try {
+        copyFileSync(snapshot, target);
+      } catch {
+        // concurrent boot
+      }
+      return `file:${target}`;
     }
-    return `file:${target}`;
   }
 
   return "file:./dev.db";

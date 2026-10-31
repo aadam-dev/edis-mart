@@ -19,7 +19,8 @@ export default async function AdminReportsPage() {
   const since7 = daysAgo(7);
   const since1 = daysAgo(0);
 
-  const [tillSales, webOrders, saleLines, variants] = await Promise.all([
+  const [tillSales, webOrders, saleLines, variants, tradeStats, partnerCount, baseline] =
+    await Promise.all([
     prisma.sale.findMany({
       where: { createdAt: { gte: since30 }, status: "completed" },
       include: { lines: true },
@@ -38,6 +39,12 @@ export default async function AdminReportsPage() {
       include: { variant: { include: { product: true } } },
     }),
     prisma.variant.findMany({ include: { product: true } }),
+    prisma.tradeInquiry.groupBy({
+      by: ["status"],
+      _count: true,
+    }).catch(() => [] as { status: string; _count: number }[]),
+    prisma.partner.count().catch(() => 0),
+    prisma.businessBaseline.findMany().catch(() => []),
   ]);
 
   const sumInRange = (
@@ -154,6 +161,45 @@ export default async function AdminReportsPage() {
             <li className="py-4 text-forest/55">No till sales in the last 30 days.</li>
           )}
         </ul>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-2">
+        <div className="border border-mist bg-white/40 p-5">
+          <p className="text-xs uppercase tracking-wider text-forest/50">
+            Trade pipeline
+          </p>
+          <ul className="mt-3 space-y-1 text-sm text-forest/70">
+            {Array.isArray(tradeStats) && tradeStats.length > 0 ? (
+              tradeStats.map((row) => (
+                <li key={row.status} className="flex justify-between">
+                  <span>{row.status}</span>
+                  <span className="tabular-nums">{row._count}</span>
+                </li>
+              ))
+            ) : (
+              <li>No inquiries yet</li>
+            )}
+          </ul>
+          <p className="mt-3 text-xs text-forest/45">
+            Partners on file: {partnerCount}
+          </p>
+        </div>
+        <div className="border border-mist bg-white/40 p-5">
+          <p className="text-xs uppercase tracking-wider text-forest/50">
+            2024 assessment baselines (not live KPIs)
+          </p>
+          <ul className="mt-3 space-y-2 text-sm text-forest/70">
+            {baseline.length === 0 && <li>Import not applied yet</li>}
+            {baseline.map((b) => (
+              <li key={b.id}>
+                <span className="font-medium text-forest">{b.label}</span>
+                <span className="block text-xs text-forest/45">
+                  {b.valueJson} · {b.verificationStatus}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
     </div>
   );

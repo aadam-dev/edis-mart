@@ -2,15 +2,20 @@ export const site = {
   name: "Yeskoko",
   company: "Edis Mart",
   domain: "edismartgh.com",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://edis-mart.vercel.app",
+  /** Canonical production origin — override only via NEXT_PUBLIC_SITE_URL */
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+    "https://edismartgh.com",
   email: "edismart777@gmail.com",
   phones: ["+233549092316", "+233543358778"],
   whatsapp: process.env.WHATSAPP_NUMBER || "233549092316",
   hours: "8:30 - 17:30",
   hoursSchema: "Mo-Fr 08:30-17:30",
   city: "Accra",
+  region: "Greater Accra",
   country: "GH",
   shippingAccraPesewas: Number(process.env.SHIPPING_ACCRA_FEE_PESEWAS || 2500),
+  locationHint: "Adenta, Accra, Ghana",
 };
 
 export function formatGhs(pesewas: number | null | undefined) {
@@ -74,4 +79,9 @@ export function formatGhPhoneDisplay(e164: string): string {
 
 export function whatsappLink(text: string) {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+}
+
+export function absoluteUrl(path = "/") {
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${site.url}${p}`;
 }

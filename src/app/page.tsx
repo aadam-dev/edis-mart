@@ -1,70 +1,72 @@
-import { HomeHero } from "@/components/motion/HomeHero";
-import { Marquee } from "@/components/motion/Marquee";
-import { TaglineReveal } from "@/components/motion/TaglineReveal";
-import { StoryReveal } from "@/components/motion/StoryReveal";
+import type { Metadata } from "next";
+import Image from "next/image";
 import { ScrollRitual } from "@/components/motion/ScrollRitual";
 import { PantryPack } from "@/components/motion/PantryPack";
+import { ProductWorlds } from "@/components/ProductWorlds";
 import { ButtonLink } from "@/components/ButtonLink";
 import { Reveal } from "@/components/motion/Reveal";
-import { site } from "@/lib/site";
+import {
+  brandVoice,
+  processSteps,
+  qualityMatrix,
+} from "@/lib/content";
+import { absoluteUrl, site } from "@/lib/site";
 
-const ritualBeats = [
-  {
-    slug: "yeskoko-sweetened-coconut-flakes",
-    name: "Coconut flakes",
-    line: "Coconut that still tastes like fruit.",
-    image: "/products/yeskoko.jpg",
-    fromPesewas: 1500,
+export const metadata: Metadata = {
+  title: {
+    absolute: "Yeskoko — Ghanaian dried fruit snacks | Edis Mart",
   },
-  {
-    slug: "chia-chia-coco",
-    name: "Chia coco",
-    line: "Coconut, chia, sesame, cinnamon, date, and honey.",
-    image: "/products/chia.jpg",
-    fromPesewas: 4500,
+  description:
+    "Yeskoko by Edis Mart: coconut flakes, chia coco, mango and pineapple chips dried in Ghana. Request a buyer pack for UK/EU/US trade, or shop retail in Ghana.",
+  alternates: { canonical: absoluteUrl("/") },
+  openGraph: {
+    title: "Yeskoko — Dried in Ghana. Distinct on shelf.",
+    description: brandVoice.promise,
+    url: absoluteUrl("/"),
+    images: [{ url: "/film/ghana/04-family/poster.jpg" }],
   },
-  {
-    slug: "pineapple-chips",
-    name: "Pineapple chips",
-    line: "Sweet-tangy chips from real pineapple.",
-    image: "/products/pineapple.jpg",
-    fromPesewas: 3500,
-  },
-  {
-    slug: "mango-chips",
-    name: "Mango chips",
-    line: "Sun-ripened mango, gently dried.",
-    image: "/products/mango.jpg",
-    fromPesewas: 3500,
-  },
-] as const;
-
-const storyPoints = [
-  ["No preservatives", "Fruit, dried carefully, packed clean."],
-  ["Sizes that make sense", "From 50g snacks to 700g kitchen packs."],
-  ["Pay the Ghana way", "Card, MoMo on Paystack, or cash on delivery."],
-] as const;
+};
 
 export default function HomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "WebSite",
+        "@id": `${site.url}/#website`,
+        url: site.url,
+        name: "Yeskoko",
+        publisher: { "@id": `${site.url}/#organization` },
+      },
+      {
         "@type": "Organization",
+        "@id": `${site.url}/#organization`,
         name: site.company,
-        brand: "Yeskoko",
+        legalName: site.company,
+        brand: { "@type": "Brand", name: "Yeskoko" },
         url: site.url,
         email: site.email,
         telephone: site.phones[0],
-      },
-      {
-        "@type": "LocalBusiness",
-        name: "Edis Mart (Yeskoko)",
-        telephone: site.phones[0],
-        email: site.email,
+        logo: absoluteUrl("/brand/logo.jpg"),
         address: {
           "@type": "PostalAddress",
           addressLocality: site.city,
+          addressRegion: site.region,
+          addressCountry: site.country,
+        },
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": `${site.url}/#localbusiness`,
+        name: "Edis Mart (Yeskoko)",
+        parentOrganization: { "@id": `${site.url}/#organization` },
+        telephone: site.phones[0],
+        email: site.email,
+        url: site.url,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: site.city,
+          addressRegion: site.region,
           addressCountry: site.country,
         },
         openingHours: site.hoursSchema,
@@ -78,67 +80,126 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HomeHero />
-      <Marquee />
-      <ScrollRitual beats={[...ritualBeats]} />
+      <ScrollRitual />
       <PantryPack />
-      <TaglineReveal />
+      <ProductWorlds />
 
-      <StoryReveal>
-        <div className="mx-auto grid max-w-[1400px] gap-12 px-4 pb-28 pt-40 md:grid-cols-12 md:gap-10 md:px-6 md:pb-40 md:pt-52">
-          <div className="md:col-span-6">
-            <p className="label-caps text-oat/45">Accra · Ghana</p>
-            <h2 className="mt-4 font-display text-4xl font-medium leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
-              Dried in Ghana.
-              <br />
-              <em className="italic">Packed for your pantry.</em>
-            </h2>
-            <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-oat/70 md:text-lg">
-              Edis Mart makes Yeskoko for people who want natural snacks without
-              the filler. Founders Mavis Walker Blagodzi and Robert Agyeman
-              Newman built the line around real fruit, clear sizes, and Accra
-              delivery — a Ghana house behind a snack you can trust on the
-              shelf.
-            </p>
-            <div className="mt-10">
-              <ButtonLink
-                href="/about"
-                className="!bg-oat !text-forest hover:!bg-sage/40"
-              >
-                Meet the makers
-              </ButtonLink>
-            </div>
+      <section className="border-t border-mist/80 bg-forest text-oat">
+        <div className="mx-auto grid max-w-[1400px] gap-12 px-4 py-20 md:grid-cols-12 md:gap-10 md:px-6 md:py-28">
+          <div className="md:col-span-5">
+            <Reveal>
+              <p className="label-caps text-oat/45">Process</p>
+              <h2 className="mt-4 font-display text-4xl font-medium tracking-tight md:text-5xl">
+                Six steps from fruit to pouch.
+              </h2>
+              <p className="mt-5 max-w-[42ch] text-base leading-relaxed text-oat/70">
+                Dehusk, slice, wash, steam, dehydrate, nitrogen-flush pack —
+                dried in Accra without preservatives.
+              </p>
+              <div className="mt-8">
+                <ButtonLink
+                  href="/process"
+                  className="!bg-oat !text-forest hover:!bg-cream"
+                >
+                  See the process
+                </ButtonLink>
+              </div>
+            </Reveal>
           </div>
-
-          <div className="md:col-span-5 md:col-start-8">
-            <ul className="space-y-10 border-t border-oat/15 pt-10">
-              {storyPoints.map(([title, body]) => (
-                <li key={title} className="border-b border-oat/15 pb-10">
-                  <p className="font-display text-2xl font-medium md:text-3xl">
-                    {title}
+          <ol className="md:col-span-7 grid gap-0 sm:grid-cols-2">
+            {processSteps.map((step, i) => (
+              <Reveal key={step.title} delay={0.04 * i}>
+                <li className="border-t border-oat/15 py-6 sm:odd:pr-6 sm:even:pl-6">
+                  <p className="label-caps text-oat/40">
+                    {String(i + 1).padStart(2, "0")}
                   </p>
-                  <p className="mt-2 max-w-[36ch] text-sm leading-relaxed text-oat/60">
-                    {body}
+                  <p className="mt-2 font-display text-2xl font-medium">
+                    {step.title}
+                  </p>
+                  <p className="mt-2 max-w-[34ch] text-sm leading-relaxed text-oat/60">
+                    {step.body}
                   </p>
                 </li>
-              ))}
-            </ul>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="section-band border-t border-mist/80">
+        <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-4 py-20 md:grid-cols-12 md:px-6 md:py-28">
+          <div className="relative aspect-[4/5] overflow-hidden md:col-span-5 md:aspect-[3/4]">
+            <Image
+              src="/film/ghana/06-makers/poster.jpg"
+              alt="Hands packing dried coconut flakes in Accra"
+              fill
+              className="object-cover"
+              sizes="(max-width:768px) 100vw, 40vw"
+            />
+          </div>
+          <div className="md:col-span-6 md:col-start-7">
+            <Reveal>
+              <p className="label-caps text-sage">Sourcing & impact</p>
+              <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-forest md:text-5xl">
+                Female-led. Farmer-sourced. Accra packed.
+              </h2>
+              <p className="mt-5 max-w-[52ch] text-base leading-relaxed text-forest/65 md:text-lg">
+                Edis Mart began in 2015 and moved into dried foods in 2020.
+                Yeskoko snacks are sourced from local farmers and packed by a
+                Ghanaian team that knows the fruit — building skills and shelf
+                presence from Accra to Tamale, Cape Coast, and Ho.
+              </p>
+              <div className="mt-8">
+                <ButtonLink href="/sourcing" variant="secondary">
+                  Read the sourcing story
+                </ButtonLink>
+              </div>
+            </Reveal>
           </div>
         </div>
-      </StoryReveal>
+      </section>
 
-      <section className="border-t border-mist bg-oat">
-        <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-8 px-4 py-20 md:flex-row md:items-end md:justify-between md:px-6 md:py-28">
+      <section id="trade" className="proof-strip">
+        <div className="mx-auto max-w-[1400px] px-4 py-16 md:px-6 md:py-24">
           <Reveal>
-            <h2 className="font-display text-4xl font-medium tracking-tight text-forest md:text-5xl lg:text-6xl">
-              Open the pantry.
+            <p className="label-caps text-clay">Quality & trade</p>
+            <h2 className="mt-4 max-w-[18ch] font-display text-4xl font-medium tracking-tight text-forest md:text-5xl">
+              Documented where we can. Honest about the roadmap.
             </h2>
-            <p className="mt-4 max-w-[42ch] text-base leading-relaxed text-forest/60 md:text-lg">
-              Pick a size. Checkout with MoMo, card, or cash on delivery.
-            </p>
           </Reveal>
-          <Reveal delay={0.1}>
-            <ButtonLink href="/shop">Shop the flakes</ButtonLink>
+          <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+            {qualityMatrix.map((item, i) => (
+              <Reveal key={item.title} delay={0.05 * i}>
+                <article className="border-t border-forest/15 pt-5">
+                  <p className="label-caps text-sage">{item.status}</p>
+                  <h3 className="mt-3 font-display text-2xl font-medium text-forest">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-forest/65">
+                    {item.body}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={0.2}>
+            <div className="mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-forest/10 pt-10">
+              <div>
+                <p className="font-display text-3xl font-medium text-forest md:text-4xl">
+                  {brandVoice.exportLine}
+                </p>
+                <p className="mt-3 max-w-[46ch] text-sm leading-relaxed text-forest/60">
+                  Importers and distributors: request the buyer pack. Ghana
+                  kitchens and retailers: shop or message wholesale.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <ButtonLink href="/export">Request buyer pack</ButtonLink>
+                <ButtonLink href="/shop" variant="secondary">
+                  Shop Ghana
+                </ButtonLink>
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>

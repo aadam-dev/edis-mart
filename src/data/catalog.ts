@@ -27,7 +27,7 @@ export const catalog: CatalogProduct[] = [
     name: "Yeskoko sweetened coconut flakes",
     tagline: "Soft sweetness, real coconut crunch.",
     description:
-      "Snack from the pouch or fold into breakfast bowls. Sweetened coconut flakes with no preservatives — dried and packed in Ghana, sized from 50g to 700g.",
+      "Snack from the pouch or fold into breakfast bowls. Sweetened coconut flakes with no preservatives — dried and packed in Accra by Edis Mart. Retail sizes from 50g to 700g; ask wholesale or export for volume formats.",
     image: "/products/yeskoko.jpg",
     skuBase: "YK-SCF",
     channel: "retail",
@@ -46,7 +46,7 @@ export const catalog: CatalogProduct[] = [
     name: "Unsweetened coconut flakes",
     tagline: "Clean coconut for bowls and baking.",
     description:
-      "The fruit without the sugar. Ideal for cooking, granola, and everyday snacking. Retail packs from 250g; kitchen kilos on wholesale.",
+      "The fruit without the sugar. Ideal for cooking, granola, and everyday snacking. Retail packs from 250g; kitchen kilos via Ghana wholesale. Importers: request formats on the export desk.",
     image: "/products/coconut-banner.jpg",
     skuBase: "YK-UCF",
     channel: "retail",
@@ -64,7 +64,7 @@ export const catalog: CatalogProduct[] = [
     name: "Chia coco",
     tagline: "Coconut with chia, sesame, cinnamon, date, and honey.",
     description:
-      "A pantry blend of coconut, chia seeds, sesame seeds, cinnamon, date, and honey as sweetener. Snack from the pouch or stir into breakfast — dried and packed in Ghana.",
+      "A pantry blend of coconut, chia seeds, sesame seeds, cinnamon, date, and honey. Snack from the pouch or stir into breakfast — dried and packed in Ghana without preservatives.",
     image: "/products/chia.jpg",
     skuBase: "YK-CCC",
     channel: "retail",
@@ -95,9 +95,9 @@ export const catalog: CatalogProduct[] = [
     id: "prod-mango",
     slug: "mango-chips",
     name: "Mango chips",
-    tagline: "Sun-ripened mango, gently dried.",
+    tagline: "Ripe mango, dried clean.",
     description:
-      "Tangy, chewy mango chips with no additives. A bright Ghana snack in a 100g pouch for home.",
+      "Tangy, chewy mango chips with no additives. A bright Ghana snack in a 100g pouch — ask trade for larger formats.",
     image: "/products/mango.jpg",
     skuBase: "YK-MC",
     channel: "retail",

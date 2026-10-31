@@ -14,7 +14,7 @@ export default async function AdminTodayPage() {
 
   const openFilter = { status: { in: ["pending", "pending_cod", "paid"] } };
 
-  const [orders, unfulfilledCount, lowStock, openSession, todaySales] =
+  const [orders, unfulfilledCount, lowStock, openSession, todaySales, tradeNew, partners] =
     await Promise.all([
       prisma.order.findMany({
         where: openFilter,
@@ -41,6 +41,8 @@ export default async function AdminTodayPage() {
         _sum: { total: true },
         _count: true,
       }),
+      prisma.tradeInquiry.count({ where: { status: "new" } }).catch(() => 0),
+      prisma.partner.count().catch(() => 0),
     ]);
 
   return (
@@ -52,7 +54,7 @@ export default async function AdminTodayPage() {
         </h1>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="border border-mist bg-white/50 p-5">
           <p className="text-xs uppercase tracking-wider text-forest/50">
             Open till
@@ -90,6 +92,34 @@ export default async function AdminTodayPage() {
             className="mt-3 inline-block text-sm font-semibold text-clay"
           >
             View orders →
+          </Link>
+        </div>
+        <div className="border border-mist bg-white/50 p-5">
+          <p className="text-xs uppercase tracking-wider text-forest/50">
+            New trade leads
+          </p>
+          <p className="mt-2 font-display text-2xl tabular-nums text-forest">
+            {tradeNew}
+          </p>
+          <Link
+            href="/admin/trade"
+            className="mt-3 inline-block text-sm font-semibold text-clay"
+          >
+            Trade queue →
+          </Link>
+        </div>
+        <div className="border border-mist bg-white/50 p-5">
+          <p className="text-xs uppercase tracking-wider text-forest/50">
+            Partners on file
+          </p>
+          <p className="mt-2 font-display text-2xl tabular-nums text-forest">
+            {partners}
+          </p>
+          <Link
+            href="/admin/partners"
+            className="mt-3 inline-block text-sm font-semibold text-clay"
+          >
+            Network →
           </Link>
         </div>
       </div>

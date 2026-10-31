@@ -2,51 +2,54 @@
 
 ## Design read
 
-Redesign overhaul of a Ghanaian premium dried-fruit DTC store for health-conscious retail shoppers (with a wholesale side door), using MotionSites product-drop language, Next.js + Tailwind + Motion/GSAP, and a Forest palette locked to the existing Yeskoko green.
+Export-first redesign of Yeskoko by Edis Mart: a Ghanaian dried-fruit brand persuading UK/EU/US importers and distributors first, while preserving Ghana retail commerce. MotionSites cinematic language, Next.js + Tailwind + Motion/GSAP, palette and voice locked in `11-export-rebrand.md`.
 
 ## Dials
 
 | Dial | Value | Notes |
 |------|-------|-------|
 | `DESIGN_VARIANCE` | 8 | Asymmetric, editorial storefront |
-| `MOTION_INTENSITY` | 7 (desktop) / ~4 (mobile) | Cinematic on marketing; commerce-safe on mobile |
+| `MOTION_INTENSITY` | 7 (desktop) / ~4 (mobile) | One heavy film on home; commerce-safe elsewhere |
 | `VISUAL_DENSITY` | 3 | Art-gallery airy; product is the hero |
 
 ## Goals
 
-1. Make Yeskoko feel premium enough that shoppers want to buy on first scroll.
-2. Migrate off WordPress/WooCommerce without losing Paystack + COD or Ghana trust signals.
-3. Ship great copy, SEO, and visuals for a small catalog (4–5 SKUs).
-4. Keep wholesale as a path, not a confusing cheaper twin catalog.
+1. Make Yeskoko feel export-credible and premium on first scroll.
+2. Tell one multi-fruit story from farm to crisp (coconut, chia coco, mango, pineapple).
+3. Separate Ghana wholesale from international `/export` acquisition.
+4. Enrich content/SEO with verified business facts only.
+5. Expand the back office with partners, production, compliance, and trade leads from the 2024 assessment — without inventing public claims.
+6. Keep Paystack + COD + WhatsApp Ghana checkout intact.
 
 ## Brand split
 
 - **Yeskoko** — consumer snack brand on the storefront.
-- **Edis Mart** — company behind it (footer, about, legal, SEO entity).
-- **Domain** — `edismartgh.com` stays.
+- **Edis Mart** — company behind it (footer, about, legal, SEO entity, trade docs).
+- **Domain** — `edismartgh.com` is canonical.
 
-## In scope (v1)
+## In scope
 
-- Cinematic home, shop, PDP, cart, checkout
-- Paystack (card + MoMo) + COD + WhatsApp composer
-- Wholesale inquiry page
-- About, contact, FAQ, legal
-- Lean admin for products / stock / orders
-- SEO migration + 301s
-- Docs-first cutover plan
+- Cinematic home film + product worlds
+- Shop, PDP, cart, checkout (Ghana)
+- `/wholesale` (domestic) + `/export` (international)
+- Process, sourcing, about, contact, FAQ
+- Trade inquiry funnel + admin queue
+- Ops: partners, production/QA, compliance, equipment, baselines
+- SEO migration + truthful structured data
 
-## Out of scope (Phase 2)
+## Out of scope (later)
 
-- Soaps, detergents, skin care, hair products (mentioned on LinkedIn)
-- Full customer accounts / loyalty
-- Multi-currency / international shipping
-- Headless CMS
-- Full till / POS (planned in `09-pos-and-back-office.md`)
+- Invented certifications or nutrition panels
+- Public partner logo wall without approval
+- Multi-currency / international shipping checkout
+- Fake hreflang locales
+- Raw-material inventory ledger (batch inputs only for now)
 
 ## Success criteria
 
-- Shopper can buy a size variant with Paystack test keys end to end.
-- COD and WhatsApp paths both work.
-- Old WooCommerce URLs 301 to new routes.
-- Lighthouse: LCP < 2.5s on home and PDP (desktop cable).
-- `prefers-reduced-motion` disables scroll hijacks.
+- Desktop + mobile film scrub without crash; reduced-motion fallback works.
+- Importer can request a buyer pack from `/export`.
+- Ghana shopper can buy with Paystack test keys, COD, or WhatsApp.
+- No unverified certification or health claims on public pages.
+- Ops can browse imported 2024 baseline partners with verification status.
+- Finish gate: average ≥ 8, no category < 7 (see `11-export-rebrand.md`).

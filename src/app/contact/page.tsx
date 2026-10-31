@@ -1,63 +1,79 @@
 import type { Metadata } from "next";
-import { site, whatsappLink } from "@/lib/site";
 import { Reveal } from "@/components/motion/Reveal";
+import { ButtonLink } from "@/components/ButtonLink";
+import { absoluteUrl, site, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Call, email, or WhatsApp Yeskoko by Edis Mart in Accra.",
+  title: "Contact Yeskoko / Edis Mart",
+  description:
+    "Retail questions, Ghana wholesale, or international trade inquiries for Yeskoko dried fruit snacks.",
+  alternates: { canonical: absoluteUrl("/contact") },
 };
 
 export default function ContactPage() {
   return (
-    <div className="mx-auto max-w-[900px] px-4 py-16 md:px-6 md:py-24">
+    <div className="mx-auto max-w-[1000px] px-4 py-16 md:px-6 md:py-24">
       <Reveal>
-        <h1 className="font-display text-5xl font-medium tracking-tight text-forest md:text-6xl lg:text-7xl">
-          Contact
+        <p className="label-caps text-clay">Contact</p>
+        <h1 className="mt-4 font-display text-5xl font-medium tracking-tight text-forest md:text-6xl">
+          Two doors: Ghana retail & trade
         </h1>
-        <p className="mt-4 max-w-[40ch] text-lg leading-relaxed text-forest/70 md:text-xl">
-          Available {site.hours}. We reply on phone and WhatsApp.
+        <p className="mt-6 max-w-[54ch] text-lg leading-relaxed text-forest/70">
+          Choose the path that matches your order. Hours {site.hours}, Accra
+          time.
         </p>
       </Reveal>
-      
-      <div className="mt-16 grid gap-8 sm:grid-cols-2">
-        <Reveal delay={0.1}>
-          <a
-            href={`tel:${site.phones[0]}`}
-            className="group block border-t border-mist/80 pt-6 transition hover:border-clay/50"
-          >
-            <p className="label-caps text-clay">Call</p>
-            <p className="mt-3 font-display text-3xl font-medium text-forest transition group-hover:text-clay">
-              {site.phones[0]}
+
+      <div className="mt-14 grid gap-8 md:grid-cols-2">
+        <Reveal delay={0.05}>
+          <article className="border border-mist bg-oat/50 p-6 md:p-8">
+            <p className="label-caps text-sage">Ghana retail & wholesale</p>
+            <h2 className="mt-3 font-display text-3xl text-forest">Shop & restock</h2>
+            <p className="mt-3 text-sm leading-relaxed text-forest/65">
+              Orders, delivery in Accra, MoMo/card/COD questions, and domestic
+              wholesale volumes.
             </p>
-            <p className="mt-1 text-sm text-forest/60">{site.phones[1]}</p>
-          </a>
+            <ul className="mt-6 space-y-2 text-sm text-forest/80">
+              <li>
+                <a className="font-medium hover:text-clay" href={`tel:${site.phones[0]}`}>
+                  {site.phones[0]}
+                </a>
+              </li>
+              <li>
+                <a className="font-medium hover:text-clay" href={`mailto:${site.email}`}>
+                  {site.email}
+                </a>
+              </li>
+            </ul>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <ButtonLink href="/shop">Shop</ButtonLink>
+              <a
+                href={whatsappLink("Hi Yeskoko — retail / wholesale question:")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="focus-ring inline-flex rounded-full border border-forest/20 px-5 py-3 text-sm font-semibold text-forest"
+              >
+                WhatsApp
+              </a>
+            </div>
+          </article>
         </Reveal>
-        
-        <Reveal delay={0.2}>
-          <a
-            href={`mailto:${site.email}`}
-            className="group block border-t border-mist/80 pt-6 transition hover:border-clay/50"
-          >
-            <p className="label-caps text-clay">Email</p>
-            <p className="mt-3 font-display text-3xl font-medium text-forest transition group-hover:text-clay">
-              {site.email}
+        <Reveal delay={0.1}>
+          <article className="border border-forest/20 bg-forest p-6 text-oat md:p-8">
+            <p className="label-caps text-oat/45">International trade</p>
+            <h2 className="mt-3 font-display text-3xl">Importers & distributors</h2>
+            <p className="mt-3 text-sm leading-relaxed text-oat/70">
+              Buyer pack requests, documentation status, formats, and private-label
+              conversations for UK / EU / US markets.
             </p>
-          </a>
+            <div className="mt-6">
+              <ButtonLink href="/export" className="!bg-oat !text-forest hover:!bg-cream">
+                Open export desk
+              </ButtonLink>
+            </div>
+          </article>
         </Reveal>
       </div>
-      
-      <Reveal delay={0.3}>
-        <div className="mt-16">
-          <a
-            href={whatsappLink("Hi Yeskoko, I have a question about...")}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="focus-ring inline-flex items-center justify-center rounded-full bg-clay px-6 py-3.5 text-sm font-semibold tracking-wide text-oat transition duration-500 hover:bg-forest active:scale-[0.98]"
-          >
-            Message on WhatsApp
-          </a>
-        </div>
-      </Reveal>
     </div>
   );
 }

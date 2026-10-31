@@ -1,33 +1,30 @@
 import type { Metadata } from "next";
-import { whatsappLink } from "@/lib/site";
+import { whatsappLink, absoluteUrl } from "@/lib/site";
 import { ButtonLink } from "@/components/ButtonLink";
 import { Reveal } from "@/components/motion/Reveal";
 
 export const metadata: Metadata = {
-  title: "Wholesale coconut flakes Ghana",
+  title: "Wholesale dried fruit Ghana",
   description:
-    "Wholesale Yeskoko coconut flakes for retailers and food service.",
+    "Domestic wholesale Yeskoko coconut flakes and fruit chips for Ghana retailers, hotels, and kitchens.",
+  alternates: { canonical: absoluteUrl("/wholesale") },
 };
 
 export default function WholesalePage() {
   const message =
-    "Hi Yeskoko, I want wholesale pricing. Business: ... Sizes: ... Volume: ... City: Accra";
+    "Hi Yeskoko, I want Ghana wholesale pricing. Business: ... Sizes: ... Volume: ... City: Accra";
 
   return (
     <div className="mx-auto max-w-[1000px] px-4 py-16 md:px-6 md:py-24">
       <Reveal>
-        <p className="label-caps text-clay">For kitchens & retailers</p>
+        <p className="label-caps text-clay">Ghana wholesale</p>
         <h1 className="mt-4 font-display text-5xl font-medium tracking-tight text-forest md:text-6xl lg:text-7xl">
-          Stock Yeskoko
+          Stock Yeskoko at home
         </h1>
         <p className="mt-6 max-w-[54ch] text-lg leading-relaxed text-forest/70 md:text-xl">
-          Built for retailers, hotels, and kitchens that restock often. Tell us
-          your business, sizes, and volume on WhatsApp — we quote from Accra and
-          confirm delivery.
-        </p>
-        <p className="mt-4 max-w-[50ch] text-sm leading-relaxed text-forest/55">
-          Include business name, sizes, approximate volume, and city so we can
-          reply fast.
+          For Ghana retailers, hotels, and kitchens that restock often. Tell us
+          your business, sizes, and volume on WhatsApp — we quote from Accra.
+          International importers should use the Export desk instead.
         </p>
       </Reveal>
 
@@ -35,17 +32,15 @@ export default function WholesalePage() {
         {[
           ["Coconut flakes", "50g to 700g wholesale rates"],
           ["Chia coco", "100g and 250g food-service packs"],
-          ["Pineapple chips", "100g wholesale at GHS 30"],
-          ["Mango chips", "100g wholesale at GHS 30"],
+          ["Pineapple chips", "100g wholesale pricing on request"],
+          ["Mango chips", "100g wholesale pricing on request"],
         ].map(([title, body], i) => (
           <Reveal key={title} delay={0.1 + i * 0.05}>
             <div className="border-t border-mist/80 pt-6">
               <p className="font-display text-2xl font-medium text-forest">
                 {title}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-forest/65">
-                {body}
-              </p>
+              <p className="mt-2 text-sm leading-relaxed text-forest/65">{body}</p>
             </div>
           </Reveal>
         ))}
@@ -57,11 +52,14 @@ export default function WholesalePage() {
             href={whatsappLink(message)}
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring inline-flex items-center justify-center rounded-full bg-clay px-6 py-3.5 text-sm font-semibold tracking-wide text-oat transition duration-500 hover:bg-forest active:scale-[0.98]"
+            className="focus-ring inline-flex items-center justify-center rounded-full bg-forest px-6 py-3.5 text-sm font-semibold tracking-wide text-oat transition duration-500 hover:bg-clay active:scale-[0.98]"
           >
             Message wholesale
           </a>
-          <ButtonLink href="/shop" variant="secondary">
+          <ButtonLink href="/export" variant="secondary">
+            International export
+          </ButtonLink>
+          <ButtonLink href="/shop" variant="ghost">
             Browse retail
           </ButtonLink>
         </div>

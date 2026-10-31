@@ -20,6 +20,10 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     });
 
     lenis.on("scroll", ScrollTrigger.update);
+    // Keep frame-scrubbers in sync when Lenis drives scroll.
+    lenis.on("scroll", () => {
+      window.dispatchEvent(new Event("yeskoko:scroll"));
+    });
 
     const ticker = (time: number) => {
       lenis.raf(time * 1000);
