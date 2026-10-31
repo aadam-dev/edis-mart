@@ -2,63 +2,74 @@
 
 Prices in GHS. Retail shown on PDPs. Wholesale prices used for inquiry quotes and admin; not as public cheaper twin products.
 
+Source: Edis Mart Christmas price list + WhatsApp catalogue (`wa.me/c/233549092316`).
+
 ## Products
 
 ### Yeskoko sweetened coconut flakes
 
 - Slug: `yeskoko-sweetened-coconut-flakes`
-- Image: `Yeskoko.jpg`
+- Image: `yeskoko.jpg`
 - SKU base: `YK-SCF`
+- Featured: yes
 
 | Size | Retail | Wholesale |
 |------|--------|-----------|
-| 50g | 15 | 12 |
+| 50g | 15 | 12.50 |
 | 100g | 30 | 25 |
 | 250g | 75 | 65 |
 | 700g | 150 | 130 |
 
-### Unsweetened coconut flakes
+### Chia coco
+
+- Slug: `chia-chia-coco`
+- Image: `chia.jpg`
+- SKU base: `YK-CCC`
+- Channel: retail
+- Featured: yes
+- Ingredients: coconut, chia seeds, sesame seeds, cinnamon, date, honey as sweetener
+
+| Size | Retail | Wholesale |
+|------|--------|-----------|
+| 100g | 45 | 40 |
+| 250g | 120 | 100 |
+
+### Pineapple chips
+
+- Slug: `pineapple-chips`
+- Image: `pineapple.jpg`
+- SKU base: `YK-PC`
+- Channel: retail
+- Featured: yes
+
+| Size | Retail | Wholesale |
+|------|--------|-----------|
+| 100g | 35 | 30 |
+
+### Mango chips
+
+- Slug: `mango-chips`
+- Image: `mango.jpg`
+- SKU base: `YK-MC`
+- Channel: retail
+- Featured: yes
+
+| Size | Retail | Wholesale |
+|------|--------|-----------|
+| 100g | 35 | 30 |
+
+### Unsweetened coconut flakes (not on current price list)
 
 - Slug: `unsweetened-coconut-flakes`
-- Image: `BANNER-1-scaled.jpg` (replace when better pack shot available)
+- Image: `coconut-banner.jpg`
 - SKU base: `YK-UCF`
+- Featured: no — kept for later pricing
 
 | Size | Retail | Wholesale |
 |------|--------|-----------|
 | 250g | 75 | 65 |
 | 700g | 130 | 130 |
 | 1kg | — (request) | 200 |
-
-### Mango chips
-
-- Slug: `mango-chips`
-- Image: `Mango.jpg`
-- SKU base: `YK-MC`
-
-| Size | Retail | Wholesale |
-|------|--------|-----------|
-| 100g | 35 | — |
-| 1kg | 350 | — |
-
-### Chia chia coco
-
-- Slug: `chia-chia-coco`
-- Image: `Chia.jpg`
-- SKU base: `YK-CCC`
-- Channel: wholesale-first
-
-| Size | Wholesale |
-|------|-----------|
-| 100g | 40 |
-| 250g | 100 |
-| 700g | 170 |
-| 1kg | 250 |
-
-### Pineapple chips (inquiry)
-
-- Slug: `pineapple-chips`
-- Status: `inquiry` until client prices
-- Image: use banner pineapple pouch crop when available
 
 ## Image download sources
 
@@ -70,4 +81,4 @@ https://edismartgh.com/wp-content/uploads/2025/02/BANNER-1-scaled.jpg
 https://edismartgh.com/wp-content/uploads/2025/02/logo-1024x328.jpg
 ```
 
-Store under `public/products/` and `public/brand/`.
+Store under `public/products/` and `public/brand/`. Pineapple pouch is cropped from `coconut-banner.jpg` into `pineapple.jpg`.

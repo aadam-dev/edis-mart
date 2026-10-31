@@ -1,17 +1,51 @@
-import { getFeaturedProductsFromDb } from "@/lib/catalog";
 import { HomeHero } from "@/components/motion/HomeHero";
 import { Marquee } from "@/components/motion/Marquee";
 import { TaglineReveal } from "@/components/motion/TaglineReveal";
 import { StoryReveal } from "@/components/motion/StoryReveal";
-import { ProductCard } from "@/components/ProductCard";
+import { ScrollRitual } from "@/components/motion/ScrollRitual";
 import { ButtonLink } from "@/components/ButtonLink";
 import { Reveal } from "@/components/motion/Reveal";
 import { site } from "@/lib/site";
 import Image from "next/image";
 
-export default async function HomePage() {
-  const products = await getFeaturedProductsFromDb();
+const ritualBeats = [
+  {
+    slug: "yeskoko-sweetened-coconut-flakes",
+    name: "Coconut flakes",
+    line: "Coconut that still tastes like fruit.",
+    image: "/products/yeskoko.jpg",
+    fromPesewas: 1500,
+  },
+  {
+    slug: "chia-chia-coco",
+    name: "Chia coco",
+    line: "Coconut, chia, sesame, cinnamon, date, and honey.",
+    image: "/products/chia.jpg",
+    fromPesewas: 4500,
+  },
+  {
+    slug: "pineapple-chips",
+    name: "Pineapple chips",
+    line: "Sweet-tangy chips from real pineapple.",
+    image: "/products/pineapple.jpg",
+    fromPesewas: 3500,
+  },
+  {
+    slug: "mango-chips",
+    name: "Mango chips",
+    line: "Sun-ripened mango, gently dried.",
+    image: "/products/mango.jpg",
+    fromPesewas: 3500,
+  },
+] as const;
 
+const storyPoints = [
+  ["No preservatives", "Fruit, dried carefully, packed clean."],
+  ["Sizes that make sense", "From 50g snacks to 700g kitchen packs."],
+  ["Pay the Ghana way", "Card, MoMo on Paystack, or cash on delivery."],
+] as const;
+
+export default function HomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -46,49 +80,7 @@ export default async function HomePage() {
       />
       <HomeHero />
       <Marquee />
-
-      <section className="mx-auto max-w-[1400px] px-4 py-24 md:px-6 md:py-36">
-        <Reveal>
-          <h2 className="font-display text-4xl font-medium tracking-tight text-forest md:text-5xl lg:text-6xl">
-            The pantry
-          </h2>
-          <p className="mt-4 max-w-[42ch] text-base leading-relaxed text-forest/60 md:text-lg">
-            Coconut flakes and fruit chips in retail sizes. Wholesale on
-            request.
-          </p>
-        </Reveal>
-
-        <div className="mt-16 grid gap-x-8 gap-y-20 md:mt-24 md:grid-cols-12">
-          {products.map((product, i) => {
-            const placements = [
-              "md:col-span-5 md:col-start-1",
-              "md:col-span-5 md:col-start-7 md:mt-28",
-              "md:col-span-6 md:col-start-3 md:mt-8",
-            ];
-            const speeds = [0.12, 0.18, 0.1];
-            return (
-              <Reveal
-                key={product.id}
-                delay={i * 0.08}
-                className={placements[i] ?? "md:col-span-5"}
-              >
-                <ProductCard
-                  product={product}
-                  variant="editorial"
-                  parallax={speeds[i] ?? 0.12}
-                />
-              </Reveal>
-            );
-          })}
-        </div>
-
-        <div className="mt-20 md:mt-28">
-          <ButtonLink href="/shop" variant="secondary">
-            View all snacks
-          </ButtonLink>
-        </div>
-      </section>
-
+      <ScrollRitual beats={[...ritualBeats]} />
       <TaglineReveal />
 
       <StoryReveal>
@@ -99,11 +91,12 @@ export default async function HomePage() {
               <br />
               <em className="italic">Packed for your pantry.</em>
             </h2>
-            <p className="mt-6 max-w-[48ch] text-base leading-relaxed text-oat/70 md:text-lg">
+            <p className="mt-6 max-w-[52ch] text-base leading-relaxed text-oat/70 md:text-lg">
               Edis Mart makes Yeskoko for people who want natural snacks without
               the filler. Founders Mavis Walker Blagodzi and Robert Agyeman
               Newman built the line around real fruit, clear sizes, and Accra
-              delivery.
+              delivery — a Ghana house behind a snack you can trust on the
+              shelf.
             </p>
             <div className="mt-10">
               <ButtonLink
@@ -117,17 +110,7 @@ export default async function HomePage() {
 
           <div className="md:col-span-5 md:col-start-8">
             <ul className="space-y-10 border-t border-oat/15 pt-10">
-              {[
-                ["No preservatives", "Fruit, dried carefully, packed clean."],
-                [
-                  "Sizes that make sense",
-                  "From 50g snacks to 1kg kitchen packs.",
-                ],
-                [
-                  "Pay the Ghana way",
-                  "Card, MoMo on Paystack, or cash on delivery.",
-                ],
-              ].map(([title, body]) => (
+              {storyPoints.map(([title, body]) => (
                 <li key={title} className="border-b border-oat/15 pb-10">
                   <p className="font-display text-2xl font-medium md:text-3xl">
                     {title}
@@ -153,6 +136,22 @@ export default async function HomePage() {
           </div>
         </div>
       </StoryReveal>
+
+      <section className="border-t border-mist bg-oat">
+        <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-8 px-4 py-20 md:flex-row md:items-end md:justify-between md:px-6 md:py-28">
+          <Reveal>
+            <h2 className="font-display text-4xl font-medium tracking-tight text-forest md:text-5xl lg:text-6xl">
+              Open the pantry.
+            </h2>
+            <p className="mt-4 max-w-[42ch] text-base leading-relaxed text-forest/60 md:text-lg">
+              Pick a size. Checkout with MoMo, card, or cash on delivery.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <ButtonLink href="/shop">Shop the flakes</ButtonLink>
+          </Reveal>
+        </div>
+      </section>
     </>
   );
 }

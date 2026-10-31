@@ -57,6 +57,15 @@ function mapDbProduct(p: {
   };
 }
 
+function withSellableVariants(product: StoreProduct): StoreProduct {
+  return {
+    ...product,
+    variants: product.variants.filter(
+      (v) => v.retailPrice != null || v.wholesalePrice != null,
+    ),
+  };
+}
+
 export async function getProductsFromDb(opts?: {
   includeHidden?: boolean;
 }): Promise<StoreProduct[]> {
@@ -66,7 +75,11 @@ export async function getProductsFromDb(opts?: {
       include: { variants: { orderBy: { size: "asc" } } },
       orderBy: { sortOrder: "asc" },
     });
-    if (rows.length) return rows.map(mapDbProduct);
+    if (rows.length) {
+      const mapped = rows.map(mapDbProduct);
+      if (opts?.includeHidden) return mapped;
+      return mapped.map(withSellableVariants);
+    }
   } catch {
     // fall through to static
   }
@@ -84,7 +97,7 @@ export async function getProductFromDb(slug: string) {
       where: { slug },
       include: { variants: { orderBy: { size: "asc" } } },
     });
-    if (row) return mapDbProduct(row);
+    if (row) return withSellableVariants(mapDbProduct(row));
   } catch {
     // fall through
   }
