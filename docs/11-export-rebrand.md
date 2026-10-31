@@ -108,13 +108,17 @@ Retailers, sales agents, suppliers, margins (~40%), GHS 20k monthly baseline, eq
 
 ## Product worlds
 
-One signature multi-fruit film on home. Distinct worlds (not four duplicate scrubs) for:
+One signature multi-fruit film on home (`docs/10-scroll-film.md` — **LOCKED**).  
+Below the film: four editorial fruit stories (not four competing scroll films):
 
-1. Sweetened coconut flakes
-2. Unsweetened coconut flakes (if catalogued)
-3. Chia coco
+1. Coconut flakes (sweetened + unsweetened sizes called out in copy)
+2. Chia coco
+3. Mango chips
 4. Pineapple chips
-5. Mango chips
+
+## Homepage locked note
+
+As of the Landing Page Lock-In pass: do not redesign the hero composition. Fix scrub reliability, labeled packs, fruit-story copy, and landing section assembly only. Changing the signature interaction requires an explicit brief change here first.
 
 ## Finish gate
 

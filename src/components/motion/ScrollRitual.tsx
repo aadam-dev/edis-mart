@@ -2,16 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useReducedMotion } from "motion/react";
 import { ritualFilm, framePath, type FilmChapter } from "@/lib/film";
+import { useScrollProgress } from "@/hooks/useScrollProgress";
 
 const jumpLinks = [
   { href: "#ritual", label: "The Ritual" },
   { href: "#products", label: "Products" },
-  { href: "#pantry-pack", label: "The Packs" },
+  { href: "#process", label: "Process" },
   { href: "#trade", label: "Trade" },
 ] as const;
+
+/** Last portion of each chapter reserved for hold + crossfade into next. */
+const BOUNDARY = 0.12;
 
 function clamp(n: number, min = 0, max = 1) {
   return Math.min(max, Math.max(min, n));
@@ -22,6 +26,9 @@ type Scrub = {
   frameA: number;
   frameB: number;
   blend: number;
+  /** 0 = fully current chapter; 1 = fully next chapter first frame */
+  crossfade: number;
+  nextChapter: number | null;
 };
 
 function scrubFromProgress(progress: number, film: FilmChapter[]): Scrub {
@@ -30,11 +37,37 @@ function scrubFromProgress(progress: number, film: FilmChapter[]): Scrub {
   const chapter = Math.min(n - 1, Math.floor(scaled * 0.999));
   const local = clamp(scaled - chapter);
   const frames = film[chapter].frames;
-  const pos = local * (frames - 1);
+  const nextChapter = chapter < n - 1 ? chapter + 1 : null;
+
+  // Soft boundary: hold last frame, then crossfade into next chapter frame 0.
+  if (nextChapter !== null && local > 1 - BOUNDARY) {
+    const t = (local - (1 - BOUNDARY)) / BOUNDARY;
+    // First third of boundary: hold; remainder: crossfade.
+    const crossfade = clamp((t - 0.28) / 0.72);
+    return {
+      chapter,
+      frameA: frames - 1,
+      frameB: frames - 1,
+      blend: 0,
+      crossfade,
+      nextChapter,
+    };
+  }
+
+  // Scrub frames across the non-boundary portion.
+  const scrubLocal = nextChapter !== null ? local / (1 - BOUNDARY) : local;
+  const pos = clamp(scrubLocal) * (frames - 1);
   const frameA = Math.floor(pos);
   const frameB = Math.min(frames - 1, frameA + 1);
   const blend = pos - frameA;
-  return { chapter, frameA, frameB, blend };
+  return {
+    chapter,
+    frameA,
+    frameB,
+    blend,
+    crossfade: 0,
+    nextChapter: null,
+  };
 }
 
 export function ScrollRitual({
@@ -44,91 +77,68 @@ export function ScrollRitual({
 }) {
   const reduce = useReducedMotion();
   const trackRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(0);
+  const { progress, setProgress } = useScrollProgress(
+    trackRef,
+    !reduce && film.length >= 2,
+  );
   const scrub = useMemo(
     () => scrubFromProgress(progress, film),
     [progress, film],
   );
   const current = film[scrub.chapter] ?? film[0];
+  const next = scrub.nextChapter !== null ? film[scrub.nextChapter] : null;
   const midFrame = Math.floor(((current?.frames ?? 6) - 1) / 2);
   const activeFrame = reduce ? midFrame : scrub.frameA;
   const packLabel =
     current.frameLabels?.[activeFrame] ??
-    current.frameLabels?.[scrub.frameB] ??
-    null;
+    (scrub.crossfade > 0.5 && next?.frameLabels?.[0]
+      ? next.frameLabels[0]
+      : null);
   const fitClass =
     current.fit === "cover"
       ? "object-cover object-center"
-      : "object-contain object-center md:object-right";
+      : "object-contain object-center";
+  const nextFitClass =
+    next?.fit === "cover"
+      ? "object-cover object-center"
+      : "object-contain object-center";
 
+  // Preload next chapter fully before the soft boundary.
   useEffect(() => {
-    if (reduce || !trackRef.current || film.length < 2) return;
-    const el = trackRef.current;
-    let frame = 0;
-    let last = -1;
-
-    const update = () => {
-      const total = el.offsetHeight - window.innerHeight;
-      const scrolled = clamp(
-        -el.getBoundingClientRect().top / Math.max(total, 1),
-      );
-      // Avoid redundant paints when Lenis fires many rAFs at the same progress.
-      const quantized = Math.round(scrolled * 1000) / 1000;
-      if (quantized !== last) {
-        last = quantized;
-        setProgress(quantized);
+    if (reduce || film.length < 2) return;
+    const chapter = scrub.chapter;
+    const local =
+      progress * film.length - Math.min(film.length - 1, Math.floor(progress * film.length * 0.999));
+    if (local > 0.55 && chapter < film.length - 1) {
+      const upcoming = film[chapter + 1];
+      for (let i = 0; i < upcoming.frames; i++) {
+        const img = new window.Image();
+        img.src = framePath(upcoming, i);
       }
-
-      const chapter = Math.min(
-        film.length - 1,
-        Math.floor(scrolled * film.length * 0.999),
-      );
-      const local = scrolled * film.length - chapter;
-      if (local > 0.45 && chapter < film.length - 1) {
-        const next = film[chapter + 1];
-        for (const i of [0, 1, 2]) {
-          const img = new window.Image();
-          img.src = framePath(next, i);
-        }
-      }
-    };
-
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    // Lenis / virtual scroll sync
-    window.addEventListener("yeskoko:scroll", onScroll);
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      window.removeEventListener("yeskoko:scroll", onScroll);
-    };
-  }, [reduce, film]);
+    }
+  }, [progress, scrub.chapter, reduce, film]);
 
   const jumpToChapter = (index: number) => {
     const el = trackRef.current;
     if (!el) return;
     const total = Math.max(el.offsetHeight - window.innerHeight, 1);
-    const local = (index + 0.28) / film.length;
+    // Land mid-chapter so labels/frames are readable, not on the crossfade edge.
+    const local = (index + 0.35) / film.length;
     setProgress(clamp(local));
     const target =
       window.scrollY + el.getBoundingClientRect().top + local * total;
-    window.scrollTo({ top: target, behavior: "smooth" });
-    // Re-sync after Lenis settles.
+    window.scrollTo({ top: target, behavior: "auto" });
+    window.dispatchEvent(new Event("yeskoko:scroll"));
     window.setTimeout(() => {
       window.dispatchEvent(new Event("yeskoko:scroll"));
-    }, 420);
+    }, 80);
   };
 
   const srcA = framePath(current, reduce ? midFrame : scrub.frameA);
   const srcB = framePath(current, reduce ? midFrame : scrub.frameB);
   const blend = reduce ? 0 : scrub.blend;
+  const crossfade = reduce ? 0 : scrub.crossfade;
+  const srcNext = next ? framePath(next, 0) : null;
 
   return (
     <section
@@ -136,11 +146,14 @@ export function ScrollRitual({
       aria-label="From the tree to the crisp"
       className="relative bg-[#e7d3bf]"
     >
-      <h1 className="sr-only">Yeskoko — dried fruit snacks from Ghana</h1>
+      <h1 className="sr-only">
+        Yeskoko — Dried in Ghana. Distinct on shelf. Dried fruit snacks from
+        Ghana.
+      </h1>
       <div
         ref={trackRef}
         className={
-          reduce ? "relative h-auto" : "relative h-[280vh] md:h-[420vh]"
+          reduce ? "relative h-auto" : "relative h-[240vh] md:h-[360vh]"
         }
       >
         <div
@@ -175,29 +188,29 @@ export function ScrollRitual({
           <div className="relative z-10 mx-auto grid w-full max-w-[1440px] flex-1 grid-cols-1 items-stretch gap-3 px-5 pb-6 md:grid-cols-12 md:items-center md:gap-8 md:px-10 md:pb-8">
             <div className="order-2 flex flex-col justify-end md:order-1 md:col-span-5 md:justify-center">
               <p
-                key={current.id}
+                key={crossfade > 0.55 && next ? next.id : current.id}
                 className="animate-[fadeRise_0.45s_cubic-bezier(0.22,1,0.36,1)] font-display text-[clamp(2.4rem,5.2vw,4.8rem)] font-medium italic leading-[0.98] tracking-tight text-forest"
               >
-                {current.title}
+                {crossfade > 0.55 && next ? next.title : current.title}
               </p>
               <p className="mt-4 max-w-[34ch] text-sm leading-relaxed text-forest/60 md:mt-5 md:text-base">
-                {current.note}
+                {crossfade > 0.55 && next ? next.note : current.note}
               </p>
               {packLabel ? (
                 <p className="mt-3 label-caps text-clay">{packLabel}</p>
               ) : null}
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
-                  href="/shop"
+                  href="/export"
                   className="focus-ring inline-flex rounded-full bg-forest px-4 py-2.5 text-sm font-semibold text-oat transition hover:bg-clay"
                 >
-                  Shop the flakes
+                  Request buyer pack
                 </Link>
                 <Link
-                  href="/export"
+                  href="/shop"
                   className="focus-ring inline-flex rounded-full border border-forest/20 px-4 py-2.5 text-sm font-semibold text-forest transition hover:border-forest"
                 >
-                  Buyer pack
+                  Shop Ghana
                 </Link>
               </div>
 
@@ -239,25 +252,41 @@ export function ScrollRitual({
             </div>
 
             <div className="relative order-1 min-h-[42dvh] md:order-2 md:col-span-7 md:min-h-0 md:h-[min(72dvh,640px)]">
-              <div className="absolute inset-0 flex items-center justify-center md:justify-end">
-                <div className="relative h-full w-full max-w-[560px] md:mr-[3%]">
+              <div className="absolute inset-0 overflow-hidden bg-[#e7d3bf]">
+                <div
+                  className={`relative h-full w-full ${
+                    current.fit === "contain"
+                      ? "mx-auto max-w-[420px] md:max-w-[480px]"
+                      : ""
+                  }`}
+                >
                   <Image
                     src={srcA}
                     alt=""
                     fill
                     priority={scrub.chapter === 0}
                     className={fitClass}
-                    sizes="(max-width:768px) 92vw, 46vw"
-                    style={{ opacity: 1 - blend }}
+                    sizes="(max-width:768px) 92vw, 54vw"
+                    style={{ opacity: (1 - blend) * (1 - crossfade) }}
                   />
                   <Image
                     src={srcB}
                     alt=""
                     fill
                     className={fitClass}
-                    sizes="(max-width:768px) 92vw, 46vw"
-                    style={{ opacity: blend }}
+                    sizes="(max-width:768px) 92vw, 54vw"
+                    style={{ opacity: blend * (1 - crossfade) }}
                   />
+                  {srcNext ? (
+                    <Image
+                      src={srcNext}
+                      alt=""
+                      fill
+                      className={nextFitClass}
+                      sizes="(max-width:768px) 92vw, 54vw"
+                      style={{ opacity: crossfade }}
+                    />
+                  ) : null}
                 </div>
               </div>
               <span className="sr-only" aria-live="polite">

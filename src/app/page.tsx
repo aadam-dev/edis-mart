@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { ScrollRitual } from "@/components/motion/ScrollRitual";
-import { PantryPack } from "@/components/motion/PantryPack";
 import { ProductWorlds } from "@/components/ProductWorlds";
 import { ButtonLink } from "@/components/ButtonLink";
 import { Reveal } from "@/components/motion/Reveal";
@@ -80,12 +79,75 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
       <ScrollRitual />
-      <PantryPack />
+
+      {/* Brand promise — dual CTAs immediately under the film */}
+      <section
+        id="promise"
+        className="border-t border-mist/80 bg-cream"
+        aria-label="Brand promise"
+      >
+        <div className="mx-auto flex max-w-[1400px] flex-col gap-8 px-4 py-12 md:flex-row md:items-end md:justify-between md:px-6 md:py-16">
+          <Reveal>
+            <p className="label-caps text-sage">Yeskoko</p>
+            <h2 className="mt-3 max-w-[18ch] font-display text-3xl font-medium tracking-tight text-forest md:text-5xl">
+              {brandVoice.exportLine}
+            </h2>
+            <p className="mt-4 max-w-[46ch] text-base leading-relaxed text-forest/65">
+              {brandVoice.promise} Importers get a clear buyer pack. Ghana
+              kitchens get the retail pouch.
+            </p>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <div className="flex flex-wrap gap-3">
+              <ButtonLink href="/export">Request buyer pack</ButtonLink>
+              <ButtonLink href="/shop" variant="secondary">
+                Shop Ghana
+              </ButtonLink>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       <ProductWorlds />
 
-      <section className="border-t border-mist/80 bg-forest text-oat">
-        <div className="mx-auto grid max-w-[1400px] gap-12 px-4 py-20 md:grid-cols-12 md:gap-10 md:px-6 md:py-28">
+      {/* Trust before long process */}
+      <section
+        id="trust"
+        className="proof-strip border-t border-mist/80"
+        aria-label="Quality and documentation"
+      >
+        <div className="mx-auto max-w-[1400px] px-4 py-14 md:px-6 md:py-20">
+          <Reveal>
+            <p className="label-caps text-clay">Quality</p>
+            <h2 className="mt-4 max-w-[20ch] font-display text-3xl font-medium tracking-tight text-forest md:text-4xl">
+              Documented where we can. Honest about the roadmap.
+            </h2>
+          </Reveal>
+          <div className="mt-10 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+            {qualityMatrix.map((item, i) => (
+              <Reveal key={item.title} delay={0.04 * i}>
+                <article className="border-t border-forest/15 pt-5">
+                  <p className="label-caps text-sage">{item.status}</p>
+                  <h3 className="mt-3 font-display text-xl font-medium text-forest md:text-2xl">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-forest/65">
+                    {item.body}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="process"
+        className="border-t border-mist/80 bg-forest text-oat"
+      >
+        <div className="mx-auto grid max-w-[1400px] gap-12 px-4 py-16 md:grid-cols-12 md:gap-10 md:px-6 md:py-24">
           <div className="md:col-span-5">
             <Reveal>
               <p className="label-caps text-oat/45">Process</p>
@@ -106,7 +168,7 @@ export default function HomePage() {
               </div>
             </Reveal>
           </div>
-          <ol className="md:col-span-7 grid gap-0 sm:grid-cols-2">
+          <ol className="grid gap-0 sm:grid-cols-2 md:col-span-7">
             {processSteps.map((step, i) => (
               <Reveal key={step.title} delay={0.04 * i}>
                 <li className="border-t border-oat/15 py-6 sm:odd:pr-6 sm:even:pl-6">
@@ -126,8 +188,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section-band border-t border-mist/80">
-        <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-4 py-20 md:grid-cols-12 md:px-6 md:py-28">
+      <section
+        id="sourcing"
+        className="section-band border-t border-mist/80"
+      >
+        <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-4 py-16 md:grid-cols-12 md:px-6 md:py-24">
           <div className="relative aspect-[4/5] overflow-hidden md:col-span-5 md:aspect-[3/4]">
             <Image
               src="/film/ghana/06-makers/poster.jpg"
@@ -159,36 +224,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="trade" className="proof-strip">
+      {/* Closing dual CTA */}
+      <section id="trade" className="border-t border-mist/80 bg-cream">
         <div className="mx-auto max-w-[1400px] px-4 py-16 md:px-6 md:py-24">
           <Reveal>
-            <p className="label-caps text-clay">Quality & trade</p>
-            <h2 className="mt-4 max-w-[18ch] font-display text-4xl font-medium tracking-tight text-forest md:text-5xl">
-              Documented where we can. Honest about the roadmap.
-            </h2>
-          </Reveal>
-          <div className="mt-12 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {qualityMatrix.map((item, i) => (
-              <Reveal key={item.title} delay={0.05 * i}>
-                <article className="border-t border-forest/15 pt-5">
-                  <p className="label-caps text-sage">{item.status}</p>
-                  <h3 className="mt-3 font-display text-2xl font-medium text-forest">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-forest/65">
-                    {item.body}
-                  </p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal delay={0.2}>
-            <div className="mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-forest/10 pt-10">
+            <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="font-display text-3xl font-medium text-forest md:text-4xl">
+                <p className="label-caps text-clay">Trade & retail</p>
+                <p className="mt-4 font-display text-3xl font-medium text-forest md:text-5xl">
                   {brandVoice.exportLine}
                 </p>
-                <p className="mt-3 max-w-[46ch] text-sm leading-relaxed text-forest/60">
+                <p className="mt-4 max-w-[46ch] text-base leading-relaxed text-forest/60">
                   Importers and distributors: request the buyer pack. Ghana
                   kitchens and retailers: shop or message wholesale.
                 </p>

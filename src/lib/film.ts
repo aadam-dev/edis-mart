@@ -12,34 +12,34 @@ export type FilmChapter = {
 };
 
 /**
- * Signature scroll film — tree → fruit → process → labeled packs (all fruits) → crisp.
- * Tree/fruit/crisp use the proven coconut motion plates.
- * Packs use real Yeskoko product photography so labels are readable.
+ * Signature scroll film — LOCKED contract in docs/10-scroll-film.md.
+ * Tree → fruit → process → labeled packs (all four fruits) → crisp.
+ * Atmospheric chapters use cover; packs use contain on a toned stage.
  */
 export const ritualFilm: FilmChapter[] = [
   {
     id: "tree",
     label: "Tree",
     title: "It starts on the tree.",
-    note: "Ghana canopy. Fruit waiting in the crown — coconut first, tropical fruit beside it.",
+    note: "Coconut palms and tropical fruit under Ghana light — the canopy before the snack.",
     dir: "/film/ritual/01-tree",
     frames: 6,
-    fit: "contain",
+    fit: "cover",
   },
   {
     id: "fruit",
     label: "Fruit",
     title: "Then the fruit, still wet.",
-    note: "Opened while the flesh is still sweet — coconut, mango, pineapple ready for drying.",
+    note: "Coconut, mango, pineapple — opened while the flesh is still sweet, selected for drying.",
     dir: "/film/ritual/02-fruit",
     frames: 6,
-    fit: "contain",
+    fit: "cover",
   },
   {
     id: "process",
     label: "Process",
     title: "Sliced, steamed, dried clean.",
-    note: "Trays in Accra. No preservatives — coconut flakes and fruit chips take shape together.",
+    note: "Trays in Accra. No preservatives — flakes and chips take shape together.",
     dir: "/film/ritual/03-process",
     frames: 6,
     fit: "cover",
@@ -48,27 +48,27 @@ export const ritualFilm: FilmChapter[] = [
     id: "packs",
     label: "Packs",
     title: "Four snacks. Clear labels.",
-    note: "Yeskoko coconut flakes, chia coco, mango chips, pineapple chips — real packs, Accra dried.",
+    note: "Sweetened coconut, chia coco, mango chips, pineapple chips — real packs, Accra dried.",
     dir: "/film/ritual/04-packs",
     frames: 6,
     fit: "contain",
     frameLabels: [
       "Sweetened coconut flakes",
-      "Unsweetened coconut",
       "Chia coco",
       "Mango chips",
       "Pineapple chips",
       "Sweetened coconut flakes",
+      "Pineapple chips",
     ],
   },
   {
     id: "crisp",
     label: "Crisp",
-    title: "Sun, and then the crunch.",
+    title: "Then the crunch.",
     note: "Irregular flakes and chips. Toasted edges. Fruit you can hear.",
     dir: "/film/ritual/05-crisp",
     frames: 6,
-    fit: "contain",
+    fit: "cover",
   },
 ];
 

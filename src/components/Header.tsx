@@ -57,6 +57,12 @@ export function Header() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
+            href="/shop"
+            className="focus-ring hidden rounded-full border border-forest/15 px-3.5 py-2 text-xs font-semibold tracking-wide text-forest transition hover:border-forest md:inline-flex"
+          >
+            Shop Ghana
+          </Link>
+          <Link
             href="/export"
             className="focus-ring hidden rounded-full bg-forest px-3.5 py-2 text-xs font-semibold tracking-wide text-oat transition hover:bg-clay md:inline-flex"
           >

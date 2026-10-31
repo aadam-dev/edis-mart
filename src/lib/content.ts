@@ -56,6 +56,7 @@ export const qualityMatrix = [
   },
 ] as const;
 
+/** @deprecated Prefer fruitStories for homepage editorial sections */
 export const productWorlds = [
   {
     slug: "yeskoko-sweetened-coconut-flakes",
@@ -88,6 +89,61 @@ export const productWorlds = [
     blurb: "Bright, sweet-tangy chips dried for the Ghana pantry.",
     image: "/products/worlds/pineapple.jpg",
     tone: "from-[#6f8748]/[0.12]",
+  },
+] as const;
+
+/**
+ * Four editorial fruit stories for the locked homepage.
+ * Claim-safe: no health, nutrition, or certification invention.
+ */
+export const fruitStories = [
+  {
+    id: "coconut",
+    eyebrow: "Coconut",
+    headline: "Flakes that still taste like the nut.",
+    body: "Sweetened Yeskoko coconut flakes carry soft sugar and a clean crunch — the Accra pantry staple. Unsweetened sizes sit beside them for kitchens that want coconut without the glaze. Same fruit, same drying house, different shelf job.",
+    occasion: "Breakfast bowls, baking, trail mixes, and export sample packs.",
+    formats: "Sweetened & unsweetened · retail pouches and trade sizes",
+    image: "/products/yeskoko.jpg",
+    imageAlt: "Yeskoko sweetened coconut flakes pack",
+    productHref: "/product/yeskoko-sweetened-coconut-flakes",
+    exportHref: "/export",
+  },
+  {
+    id: "chia",
+    eyebrow: "Chia coco",
+    headline: "Coconut with a seed crunch.",
+    body: "Chia coco blends coconut with chia, sesame, cinnamon, date, and honey — a denser chew than plain flakes, still dried in Accra without preservatives. Built for snackers who want texture and warmth in one pouch.",
+    occasion: "Afternoon snack, yogurt topper, travel pouch.",
+    formats: "Chia coco blend · labeled retail pack",
+    image: "/products/chia.jpg",
+    imageAlt: "Yeskoko chia coco pack",
+    productHref: "/product/chia-chia-coco",
+    exportHref: "/export",
+  },
+  {
+    id: "mango",
+    eyebrow: "Mango",
+    headline: "Ripe mango, dried to a chewy chip.",
+    body: "Mango chips keep the tang of ripe fruit with a slow chew — no additives on the claim we publish. Selected fruit, sliced for even drying, packed so the colour and bite survive the shelf.",
+    occasion: "Kids’ lunchboxes, office drawers, Ghana retail aisles.",
+    formats: "Mango chips · clear retail labeling",
+    image: "/products/mango.jpg",
+    imageAlt: "Yeskoko mango chips pack",
+    productHref: "/product/mango-chips",
+    exportHref: "/export",
+  },
+  {
+    id: "pineapple",
+    eyebrow: "Pineapple",
+    headline: "Bright pineapple you can hear.",
+    body: "Pineapple chips land sweet-tangy with toasted edges — irregular pieces, not stamped cookies. Dried clean in Accra for pantries that want tropical fruit without syrup drama.",
+    occasion: "Sharing bowls, gift baskets, buyer samples.",
+    formats: "Pineapple chips · Accra packed",
+    image: "/products/pineapple.jpg",
+    imageAlt: "Yeskoko pineapple chips pack",
+    productHref: "/product/pineapple-chips",
+    exportHref: "/export",
   },
 ] as const;
 
