@@ -3,10 +3,10 @@ import { Marquee } from "@/components/motion/Marquee";
 import { TaglineReveal } from "@/components/motion/TaglineReveal";
 import { StoryReveal } from "@/components/motion/StoryReveal";
 import { ScrollRitual } from "@/components/motion/ScrollRitual";
+import { PantryPack } from "@/components/motion/PantryPack";
 import { ButtonLink } from "@/components/ButtonLink";
 import { Reveal } from "@/components/motion/Reveal";
 import { site } from "@/lib/site";
-import Image from "next/image";
 
 const ritualBeats = [
   {
@@ -81,12 +81,14 @@ export default function HomePage() {
       <HomeHero />
       <Marquee />
       <ScrollRitual beats={[...ritualBeats]} />
+      <PantryPack />
       <TaglineReveal />
 
       <StoryReveal>
-        <div className="mx-auto grid max-w-[1400px] gap-12 px-4 py-28 md:grid-cols-12 md:gap-10 md:px-6 md:py-40">
+        <div className="mx-auto grid max-w-[1400px] gap-12 px-4 pb-28 pt-40 md:grid-cols-12 md:gap-10 md:px-6 md:pb-40 md:pt-52">
           <div className="md:col-span-6">
-            <h2 className="font-display text-4xl font-medium leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
+            <p className="label-caps text-oat/45">Accra · Ghana</p>
+            <h2 className="mt-4 font-display text-4xl font-medium leading-[1.1] tracking-tight md:text-5xl lg:text-6xl">
               Dried in Ghana.
               <br />
               <em className="italic">Packed for your pantry.</em>
@@ -121,18 +123,6 @@ export default function HomePage() {
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="md:col-span-10 md:col-start-2 md:mt-8">
-            <div className="relative mx-auto aspect-[16/9] max-w-4xl overflow-hidden rounded-[2rem] bg-sage/20">
-              <Image
-                src="/products/coconut-banner.jpg"
-                alt="Yeskoko dried coconut and fruit chips"
-                fill
-                className="object-cover"
-                sizes="(max-width:768px) 100vw, 80vw"
-              />
-            </div>
           </div>
         </div>
       </StoryReveal>
