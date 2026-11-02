@@ -57,16 +57,10 @@ export function Header() {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
-            href="/shop"
-            className="focus-ring hidden rounded-full border border-forest/15 px-3.5 py-2 text-xs font-semibold tracking-wide text-forest transition hover:border-forest md:inline-flex"
-          >
-            Shop Ghana
-          </Link>
-          <Link
             href="/export"
             className="focus-ring hidden rounded-full bg-forest px-3.5 py-2 text-xs font-semibold tracking-wide text-oat transition hover:bg-clay md:inline-flex"
           >
-            Request buyer pack
+            For buyers
           </Link>
           <Link
             href="/cart"
@@ -115,14 +109,7 @@ export function Header() {
               onClick={() => setOpen(false)}
               className="mt-3 rounded-full bg-forest px-4 py-3 text-center text-sm font-semibold text-oat"
             >
-              Request buyer pack
-            </Link>
-            <Link
-              href="/shop"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-full border border-forest/15 px-4 py-3 text-center text-sm font-semibold text-forest"
-            >
-              Shop Ghana
+              For buyers
             </Link>
           </nav>
         </div>

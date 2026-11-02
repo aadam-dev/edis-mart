@@ -199,20 +199,16 @@ export function ScrollRitual({
               {packLabel ? (
                 <p className="mt-3 label-caps text-clay">{packLabel}</p>
               ) : null}
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Link
-                  href="/export"
-                  className="focus-ring inline-flex rounded-full bg-forest px-4 py-2.5 text-sm font-semibold text-oat transition hover:bg-clay"
-                >
-                  Request buyer pack
-                </Link>
-                <Link
-                  href="/shop"
-                  className="focus-ring inline-flex rounded-full border border-forest/20 px-4 py-2.5 text-sm font-semibold text-forest transition hover:border-forest"
-                >
-                  Shop Ghana
-                </Link>
-              </div>
+              {scrub.chapter === film.length - 1 ? (
+                <div className="mt-5">
+                  <Link
+                    href="/export"
+                    className="focus-ring inline-flex rounded-full bg-forest px-4 py-2.5 text-sm font-semibold text-oat transition hover:bg-clay"
+                  >
+                    Request the buyer pack
+                  </Link>
+                </div>
+              ) : null}
 
               <div className="mt-8 max-w-md md:mt-10">
                 <div className="relative h-px bg-forest/15">

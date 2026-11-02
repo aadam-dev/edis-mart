@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { trackEvent } from "@/lib/analytics";
 
 const products = [
@@ -20,7 +21,22 @@ const volumes = [
   "Not sure yet",
 ] as const;
 
+function parsePrefill(raw: string | null): Set<string> {
+  if (!raw) return new Set();
+  return new Set(
+    raw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+}
+
 export function TradeInquiryForm() {
+  const searchParams = useSearchParams();
+  const prefill = useMemo(
+    () => parsePrefill(searchParams.get("products")),
+    [searchParams],
+  );
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">(
     "idle",
   );
@@ -69,7 +85,10 @@ export function TradeInquiryForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-5 border border-forest/10 bg-oat/60 p-5 md:p-8">
+    <form
+      onSubmit={onSubmit}
+      className="space-y-5 border border-forest/10 bg-oat/60 p-5 md:p-8"
+    >
       <div className="grid gap-5 md:grid-cols-2">
         <label className="block text-sm">
           <span className="label-caps text-forest/50">Organization</span>
@@ -120,7 +139,13 @@ export function TradeInquiryForm() {
         <div className="mt-3 grid gap-2 sm:grid-cols-2">
           {products.map((p) => (
             <label key={p} className="flex items-center gap-2 text-sm text-forest/80">
-              <input type="checkbox" name="products" value={p} className="accent-forest" />
+              <input
+                type="checkbox"
+                name="products"
+                value={p}
+                defaultChecked={prefill.has(p)}
+                className="accent-forest"
+              />
               {p}
             </label>
           ))}

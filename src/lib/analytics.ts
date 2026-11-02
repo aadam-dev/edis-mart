@@ -9,7 +9,9 @@ export type AnalyticsEvent =
   | "checkout_start"
   | "whatsapp_click"
   | "path_ghana"
-  | "path_trade";
+  | "path_trade"
+  | "mix_toggle"
+  | "mix_cta";
 
 export function trackEvent(
   event: AnalyticsEvent,

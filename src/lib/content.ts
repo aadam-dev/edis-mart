@@ -9,27 +9,27 @@ export const brandVoice = {
 export const processSteps = [
   {
     title: "Dehusk & peel",
-    body: "Coconut and fruit prepared for clean drying — skins and husks removed with care.",
+    body: "Skins and husks removed with care.",
   },
   {
     title: "Slice",
-    body: "Uniform cuts so trays dry evenly and packs stay consistent.",
+    body: "Uniform cuts for even drying.",
   },
   {
     title: "Wash",
-    body: "Rinsed clean before heat — hygiene before flavour.",
+    body: "Rinsed clean before heat.",
   },
   {
     title: "Steam / blanch",
-    body: "A controlled pass that readies fruit for dehydration.",
+    body: "Readied for dehydration.",
   },
   {
     title: "Dehydrate",
-    body: "Dried in Accra without preservatives — texture first.",
+    body: "Dried in Accra, no preservatives.",
   },
   {
     title: "Nitrogen-flush pack",
-    body: "Sealed for the shelf so the crunch lasts in the pouch.",
+    body: "Sealed so the crunch lasts.",
   },
 ] as const;
 
@@ -37,115 +37,125 @@ export const qualityMatrix = [
   {
     status: "Documented",
     title: "Ghana FDA documentation",
-    body: "Facility and product documentation under Ghana FDA. Exact certificates available in the buyer pack on request.",
+    body: "Facility and product documentation under Ghana FDA. Exact certificates ship with the buyer pack on request.",
   },
   {
     status: "Documented",
     title: "Registrar of Companies",
-    body: "Edis Mart is a registered Ghanaian company behind the Yeskoko brand.",
+    body: "Edis Mart, the Ghanaian company behind Yeskoko.",
   },
   {
-    status: "Market proof",
-    title: "Ghana retail reach",
-    body: "Sold through retail partners across Accra, Tamale, Cape Coast, and Ho.",
+    status: "On shelves",
+    title: "Accra, Tamale, Cape Coast, Ho",
+    body: "Sold through Ghana retail partners.",
   },
   {
-    status: "Roadmap",
-    title: "GSA & export certifications",
-    body: "Additional export certifications are in progress. We do not claim GSA or foreign approvals until documents are current.",
+    status: "In progress",
+    title: "GSA certification",
+    body: "Listed here as current once the certificate is issued.",
   },
 ] as const;
 
-/** @deprecated Prefer fruitStories for homepage editorial sections */
-export const productWorlds = [
+export const buyerRouteSteps = [
   {
-    slug: "yeskoko-sweetened-coconut-flakes",
-    name: "Sweetened coconut flakes",
-    eyebrow: "Coconut",
-    blurb: "Soft sweetness, real coconut crunch — the Yeskoko signature snack.",
-    image: "/products/worlds/coconut.jpg",
-    tone: "from-[#173b2a]/[0.08]",
+    title: "Request the buyer pack",
+    body: "Products, formats, documentation status.",
   },
   {
-    slug: "chia-chia-coco",
-    name: "Chia coco",
-    eyebrow: "Blend",
-    blurb: "Coconut with chia, sesame, cinnamon, date, and honey.",
-    image: "/products/worlds/chia.jpg",
-    tone: "from-[#b55c3b]/[0.10]",
+    title: "Samples and documents",
+    body: "Sample set and copies of what we hold.",
   },
   {
-    slug: "mango-chips",
-    name: "Mango chips",
-    eyebrow: "Mango",
-    blurb: "Tangy, chewy chips from ripe mango — no additives.",
-    image: "/products/worlds/mango.jpg",
-    tone: "from-[#e0a128]/[0.14]",
+    title: "Formats and volumes",
+    body: "Pouch sizes, carton counts, and packing enquiries.",
   },
   {
-    slug: "pineapple-chips",
-    name: "Pineapple chips",
-    eyebrow: "Pineapple",
-    blurb: "Bright, sweet-tangy chips dried for the Ghana pantry.",
-    image: "/products/worlds/pineapple.jpg",
-    tone: "from-[#6f8748]/[0.12]",
+    title: "First order",
+    body: "Lead times confirmed in writing once volumes are clear.",
   },
 ] as const;
 
 /**
- * Four editorial fruit stories for the locked homepage.
+ * Four fruit fields for the homepage (docs/13).
  * Claim-safe: no health, nutrition, or certification invention.
+ * Interim pack JPGs — replace before launch (docs/13 §1.7).
  */
 export const fruitStories = [
   {
     id: "coconut",
-    eyebrow: "Coconut",
-    headline: "Flakes that still taste like the nut.",
-    body: "Sweetened Yeskoko coconut flakes carry soft sugar and a clean crunch — the Accra pantry staple. Unsweetened sizes sit beside them for kitchens that want coconut without the glaze. Same fruit, same drying house, different shelf job.",
-    occasion: "Breakfast bowls, baking, trail mixes, and export sample packs.",
-    formats: "Sweetened & unsweetened · retail pouches and trade sizes",
+    eyebrow: "01 / 04 · Coconut",
+    giant: "Coconut",
+    hook: "Flakes that still taste like the nut.",
+    line: "Shaved thin and dried to a clean snap. Sweetened for the snack bowl, unsweetened for the kitchen.",
+    spec: "Sweetened & unsweetened · retail pouch · trade sizes on request",
+    cta: "See coconut flakes",
+    field: "field-coconut" as const,
+    ink: "oat" as const,
     image: "/products/yeskoko.jpg",
     imageAlt: "Yeskoko sweetened coconut flakes pack",
     productHref: "/product/yeskoko-sweetened-coconut-flakes",
-    exportHref: "/export",
+    inquiryProduct: "Sweetened coconut flakes",
+    mixSlug: "yeskoko-sweetened-coconut-flakes",
+    mixSize: "100g",
+    mixSku: "YK-SCF-100",
   },
   {
     id: "chia",
-    eyebrow: "Chia coco",
-    headline: "Coconut with a seed crunch.",
-    body: "Chia coco blends coconut with chia, sesame, cinnamon, date, and honey — a denser chew than plain flakes, still dried in Accra without preservatives. Built for snackers who want texture and warmth in one pouch.",
-    occasion: "Afternoon snack, yogurt topper, travel pouch.",
-    formats: "Chia coco blend · labeled retail pack",
+    eyebrow: "02 / 04 · Chia coco",
+    giant: "Chia coco",
+    hook: "Coconut with a seed crunch.",
+    line: "Coconut, chia, sesame, cinnamon, date and honey, dried together into a denser chew.",
+    spec: "Blend · retail pouch",
+    cta: "See chia coco",
+    field: "field-chia" as const,
+    ink: "oat" as const,
     image: "/products/chia.jpg",
     imageAlt: "Yeskoko chia coco pack",
     productHref: "/product/chia-chia-coco",
-    exportHref: "/export",
+    inquiryProduct: "Chia coco",
+    mixSlug: "chia-chia-coco",
+    mixSize: "100g",
+    mixSku: "YK-CCC-100",
   },
   {
     id: "mango",
-    eyebrow: "Mango",
-    headline: "Ripe mango, dried to a chewy chip.",
-    body: "Mango chips keep the tang of ripe fruit with a slow chew — no additives on the claim we publish. Selected fruit, sliced for even drying, packed so the colour and bite survive the shelf.",
-    occasion: "Kids’ lunchboxes, office drawers, Ghana retail aisles.",
-    formats: "Mango chips · clear retail labeling",
+    eyebrow: "03 / 04 · Mango",
+    giant: "Mango",
+    hook: "Ripe mango, dried to a slow chew.",
+    line: "Cut from ripe fruit and dried until the tang concentrates.",
+    spec: "Mango chips · retail pouch",
+    cta: "See mango chips",
+    field: "field-mango" as const,
+    ink: "forest" as const,
     image: "/products/mango.jpg",
     imageAlt: "Yeskoko mango chips pack",
     productHref: "/product/mango-chips",
-    exportHref: "/export",
+    inquiryProduct: "Mango chips",
+    mixSlug: "mango-chips",
+    mixSize: "100g",
+    mixSku: "YK-MC-100",
   },
   {
     id: "pineapple",
-    eyebrow: "Pineapple",
-    headline: "Bright pineapple you can hear.",
-    body: "Pineapple chips land sweet-tangy with toasted edges — irregular pieces, not stamped cookies. Dried clean in Accra for pantries that want tropical fruit without syrup drama.",
-    occasion: "Sharing bowls, gift baskets, buyer samples.",
-    formats: "Pineapple chips · Accra packed",
+    eyebrow: "04 / 04 · Pineapple",
+    giant: "Pineapple",
+    hook: "Pineapple you can hear.",
+    line: "Rings dried until the edges toast and the centre stays bright.",
+    spec: "Pineapple chips · retail pouch",
+    cta: "See pineapple chips",
+    field: "field-pineapple" as const,
+    ink: "oat" as const,
     image: "/products/pineapple.jpg",
     imageAlt: "Yeskoko pineapple chips pack",
     productHref: "/product/pineapple-chips",
-    exportHref: "/export",
+    inquiryProduct: "Pineapple chips",
+    mixSlug: "pineapple-chips",
+    mixSize: "100g",
+    mixSku: "YK-PC-100",
   },
 ] as const;
+
+export type FruitStory = (typeof fruitStories)[number];
 
 export const faqs = [
   {

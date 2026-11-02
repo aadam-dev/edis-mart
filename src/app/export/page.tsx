@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { TradeInquiryForm } from "@/components/TradeInquiryForm";
 import { Reveal } from "@/components/motion/Reveal";
 import { ButtonLink } from "@/components/ButtonLink";
@@ -117,7 +118,9 @@ export default function ExportPage() {
           </p>
         </Reveal>
         <div className="mt-10">
-          <TradeInquiryForm />
+          <Suspense fallback={<div className="border border-forest/10 bg-oat/60 p-8 text-sm text-forest/60">Loading inquiry form…</div>}>
+            <TradeInquiryForm />
+          </Suspense>
         </div>
         <p className="mt-6 text-sm text-forest/55">
           Prefer WhatsApp?{" "}

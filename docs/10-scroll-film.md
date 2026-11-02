@@ -1,44 +1,50 @@
-# 10 — Scroll film: From tree to the crisp (LOCKED)
+# 10 — Scroll film: From tree to the crisp
 
-> **Homepage hero is frozen.** Repair scrub/assets/copy only. Do not invent a new hero concept without changing `docs/11-export-rebrand.md`.
+> **Superseded for homepage section stack by [`13-motion-redesign.md`](13-motion-redesign.md).**  
+> Approving doc 13 is the brief change that unlocks this file and the homepage-locked note in docs/11.  
+> **Current media:** keep `/film/ritual/*` and `ScrollRitual` until `public/film/day/` + `SunFilm` ship. Do not invent a third hero concept outside doc 13.
 
-## Intent
+## Intent (still true)
 
-One signature homepage film. Tree → fruit → process → **labeled packs for all four fruits** → crisp.  
+One signature homepage film. Tree → fruit → process → labeled packs → crisp.  
 No second pin. No per-fruit scroll films.
 
-## Chapters (locked)
+## Chapters (current ritual media)
 
 | # | Id | Label | Title | Note | Media | Fit |
 |---|----|-------|-------|------|-------|-----|
 | 1 | tree | Tree | It starts on the tree. | Coconut palms and tropical fruit under Ghana light. | `/film/ritual/01-tree` | cover |
 | 2 | fruit | Fruit | Then the fruit, still wet. | Coconut, mango, pineapple — selected for drying. | `/film/ritual/02-fruit` | cover |
 | 3 | process | Process | Sliced, steamed, dried clean. | Accra trays. No preservatives. | `/film/ritual/03-process` | cover |
-| 4 | packs | Packs | Four snacks. Clear labels. | Sweetened coconut → chia coco → mango → pineapple. | `/film/ritual/04-packs` from real `public/products/*.jpg` | contain |
+| 4 | packs | Packs | Four snacks. Clear labels. | Sweetened coconut → chia coco → mango → pineapple. | `/film/ritual/04-packs` | contain |
 | 5 | crisp | Crisp | Then the crunch. | Irregular flakes and chips. | `/film/ritual/05-crisp` | cover |
 
-Packs frame order (locked):  
+Packs frame order:  
 `00` sweetened coconut · `01` chia coco · `02` mango · `03` pineapple · `04` sweetened coconut · `05` pineapple
 
-## CTAs (locked)
+Interim pack JPGs stay **out of the day-film**; doc 13 §1.7 requires real pouch photos before launch.
 
-- Primary: **Request buyer pack** → `/export`
-- Secondary: **Shop Ghana** → `/shop`
+## CTAs (doc 13 rule)
 
-## Layout / motion rules
+- Header carries global paths: **Shop** (nav) + **For buyers** → `/export`
+- Film: **Request the buyer pack** on the final chapter only
+- No repeated “Shop Ghana” pair inside every section
 
-- Track: `~240vh` mobile / `~360vh` desktop (no empty 400vh+ runway)
-- Sticky full-viewport stage; stage colour matches media edge (`#e7d3bf`)
-- Soft chapter boundary: crossfade last frame of chapter N into first frame of N+1
-- Shared progress from native `scroll` + `yeskoko:scroll` (Lenis)
-- Crawl H1: sr-only brand line; visible chapter title is italic display
-- Reduced motion: mid-frame + chapter buttons; no inflated track
+## Layout / motion rules (current ScrollRitual)
 
-## Landing stack after the film (locked)
+- Track: `~240vh` mobile / `~360vh` desktop
+- Sticky stage; soft chapter crossfade; Lenis + native scroll progress
+- Reduced motion: mid-frame + chapter buttons
 
-1. Brand promise strip  
-2. Four fruit editorial stories  
-3. Process  
-4. Trust / quality  
-5. Sourcing  
-6. Closing trade + shop CTA  
+## Landing stack after the film (doc 13)
+
+1. The line (brand promise, once)  
+2. Fruit fields ×4  
+3. Pack your mix  
+4. How it's made  
+5. What we can show you (proof)  
+6. From our trays to your shelf  
+7. The people  
+8. In Ghana?  
+
+See [`13-motion-redesign.md`](13-motion-redesign.md) §3–§5 for copy and motion. Day-film stills and `SunFilm` are a later phase.

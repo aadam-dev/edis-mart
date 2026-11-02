@@ -108,8 +108,8 @@ Retailers, sales agents, suppliers, margins (~40%), GHS 20k monthly baseline, eq
 
 ## Product worlds
 
-One signature multi-fruit film on home (`docs/10-scroll-film.md` — **LOCKED**).  
-Below the film: four editorial fruit stories (not four competing scroll films):
+One signature multi-fruit film on home (`docs/10-scroll-film.md`, media still ritual until day film ships).  
+Below the film: the section stack in [`docs/13-motion-redesign.md`](13-motion-redesign.md) — fruit fields (not four competing scroll films), pack-your-mix, proof, process, buyer route, people, In Ghana.
 
 1. Coconut flakes (sweetened + unsweetened sizes called out in copy)
 2. Chia coco
@@ -118,7 +118,7 @@ Below the film: four editorial fruit stories (not four competing scroll films):
 
 ## Homepage locked note
 
-As of the Landing Page Lock-In pass: do not redesign the hero composition. Fix scrub reliability, labeled packs, fruit-story copy, and landing section assembly only. Changing the signature interaction requires an explicit brief change here first.
+**Unlocked by docs/13 (2026-11-02).** The Landing Page Lock-In freeze is lifted for the homepage **section stack** and CTA hierarchy described in docs/13. Current ritual film frames stay until `public/film/day/` + `SunFilm` exist — do not invent a third hero outside that brief. Interim pack photos remain owner-review flags (garbled regulatory text; replace before launch).
 
 ## Finish gate
 

@@ -72,11 +72,6 @@ export const ritualFilm: FilmChapter[] = [
   },
 ];
 
-/** @deprecated use ritualFilm */
-export const ghanaFilm = ritualFilm;
-/** @deprecated use ritualFilm */
-export const coconutFilm = ritualFilm;
-
 export function framePath(chapter: FilmChapter, index: number) {
   const i = Math.max(0, Math.min(chapter.frames - 1, index));
   return `${chapter.dir}/frame_${String(i).padStart(2, "0")}.webp`;

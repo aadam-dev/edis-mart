@@ -16,6 +16,15 @@
   --leaf: #6f8748;
   --mango: #e0a128;
   --hibiscus: #8e3638;
+  /* docs/13 derived field + sun tokens */
+  --field-coconut: #173b2a;
+  --field-chia: #9a4a2e;
+  --field-mango: #e0a128;
+  --field-pineapple: #4e6332;
+  --table: #e9dfcf;
+  --sun-am: #efe6d6;
+  --sun-noon: #f3ebdd;
+  --sun-pm: #ebcf9f;
   --background: var(--oat);
   --foreground: var(--ink);
 }
@@ -35,6 +44,14 @@
   --color-leaf: var(--leaf);
   --color-mango: var(--mango);
   --color-hibiscus: var(--hibiscus);
+  --color-field-coconut: var(--field-coconut);
+  --color-field-chia: var(--field-chia);
+  --color-field-mango: var(--field-mango);
+  --color-field-pineapple: var(--field-pineapple);
+  --color-table: var(--table);
+  --color-sun-am: var(--sun-am);
+  --color-sun-noon: var(--sun-noon);
+  --color-sun-pm: var(--sun-pm);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-display: var(--font-cormorant);
