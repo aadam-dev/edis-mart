@@ -1,8 +1,10 @@
 # 09 — POS and back office (Edis Mart)
 
-**Status:** plan only. Not built yet. Argue with this before it becomes code.
+**Status:** plan + live till/ops in the app. Argue with this before large redesigns.
 
 This is the in-person and ops layer for **Edis Mart** (the company) selling **Yeskoko** (the snack brand) and other dried fruit lines: coconut flakes, mango chips, chia coco, pineapple, and later wholesale packs.
+
+**Sales walkthrough:** a recorded pass of storefront → admin → till lives in [`14-sales-walkthrough.md`](14-sales-walkthrough.md) (`demo/yeskoko-edis-mart-walkthrough.mp4`).
 
 It should feel like the storefront: Forest surfaces, leaf CTAs, bone paper, Outfit display, Manrope body, sharp product tiles, pill buttons. No blush fashion chrome. No generic grey SaaS.
 

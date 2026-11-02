@@ -48,6 +48,9 @@ prisma/*.db-journal
 .agents/skills/
 skills-lock.json
 
+# demo recorder intermediates (finished cut: demo/yeskoko-edis-mart-walkthrough.mp4)
+/demo/raw/
+
 # vercel
 .vercel
 

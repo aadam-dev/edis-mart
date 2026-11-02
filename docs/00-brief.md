@@ -45,6 +45,12 @@ Export-first redesign of Yeskoko by Edis Mart: a Ghanaian dried-fruit brand pers
 - Fake hreflang locales
 - Raw-material inventory ledger (batch inputs only for now)
 
+## Sales walkthrough
+
+Storefront → ops → till demo video: [`14-sales-walkthrough.md`](14-sales-walkthrough.md) (`demo/yeskoko-edis-mart-walkthrough.mp4`).
+
+Homepage motion redesign brief: [`13-motion-redesign.md`](13-motion-redesign.md).
+
 ## Success criteria
 
 - Desktop + mobile film scrub without crash; reduced-motion fallback works.

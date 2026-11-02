@@ -24,6 +24,8 @@ Migration brain lives in `docs/`:
 
 - `00-brief.md` … `08-cutover.md`
 - POS + back office: `docs/09-pos-and-back-office.md`
+- Sales walkthrough video: `docs/14-sales-walkthrough.md` (`demo/yeskoko-edis-mart-walkthrough.mp4`)
+- Homepage motion redesign: `docs/13-motion-redesign.md`
 
 ## Stack
 
